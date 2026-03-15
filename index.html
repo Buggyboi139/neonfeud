@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Word Orb Puzzle - Dark Theme</title>
+  <title>Word Orb Puzzle - Circular Swap</title>
   <style>
     body {
       margin: 0;
@@ -15,6 +15,7 @@
       font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       background: linear-gradient(135deg, #121212 0%, #1e1e2f 100%);
       color: #e0e0e0;
+      overflow: hidden;
     }
 
     .game-header {
@@ -46,6 +47,7 @@
       margin-bottom: 15px;
       text-transform: uppercase;
       text-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+      transition: color 0.3s ease;
     }
 
     .game-board {
@@ -53,9 +55,27 @@
       width: 400px;
       height: 400px;
       background: #1a1a24;
-      border-radius: 20px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 20px rgba(0,0,0,0.5);
+      border-radius: 50%; /* Make the board circular to match the vibe */
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 30px rgba(0,0,0,0.5);
       border: 1px solid #2a2a35;
+    }
+
+    #puzzleContainer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      transform-origin: center center;
+    }
+
+    #puzzleContainer.solved {
+      animation: spinFade 1.2s ease-in-out forwards;
+    }
+
+    @keyframes spinFade {
+      0% { transform: rotate(0deg) scale(1); opacity: 1; }
+      100% { transform: rotate(360deg) scale(0.5); opacity: 0; }
     }
 
     #wireLayer {
@@ -68,11 +88,18 @@
       z-index: 1;
     }
 
-    @keyframes float {
-      0% { transform: translate(0px, 0px); }
-      33% { transform: translate(4px, -8px); }
-      66% { transform: translate(-4px, -4px); }
-      100% { transform: translate(0px, 0px); }
+    .start-marker {
+      position: absolute;
+      left: 50%;
+      top: 25px;
+      transform: translateX(-50%);
+      color: #2ecc71;
+      font-size: 0.8rem;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      z-index: 3;
+      text-shadow: 0 0 5px rgba(46, 204, 113, 0.5);
     }
 
     .dot {
@@ -91,25 +118,17 @@
       font-weight: bold;
       user-select: none;
       z-index: 2;
-      animation: float 4s ease-in-out infinite;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
     }
 
-    .dot:nth-child(even) {
-      animation-duration: 5s;
-      animation-delay: 0.5s;
-    }
-
-    .dot:nth-child(odd) {
-      animation-duration: 3.5s;
-      animation-delay: 1s;
+    .dot:hover {
+      transform: scale(1.1);
     }
 
     .dot.selected {
-      background-color: #2ecc71;
-      box-shadow: 0 0 20px rgba(46, 204, 113, 0.9);
-      animation: none;
-      transform: scale(0.9);
-      pointer-events: none;
+      background-color: #e67e22; /* Orange highlight for the first clicked orb */
+      box-shadow: 0 0 20px rgba(230, 126, 34, 0.9);
+      transform: scale(1.1);
     }
   </style>
 </head>
@@ -117,21 +136,27 @@
 
   <div class="game-header">
     <h1 class="level-text" id="levelDisplay">Level 1</h1>
-    <p class="flavor-text" id="flavorDisplay">Spell the hidden word.</p>
+    <p class="flavor-text" id="flavorDisplay">Swap orbs to spell the word clockwise.</p>
   </div>
 
   <div class="guess-display" id="guessDisplay"></div> 
 
   <div class="game-board" id="gameBoard">
-    <svg id="wireLayer"></svg>
+    <div class="start-marker" id="startMarker">Start ⬇</div>
+    <div id="puzzleContainer">
+      <svg id="wireLayer"></svg>
+      <div id="orbLayer"></div>
+    </div>
   </div>
 
   <script>
     let currentLevel = 1;
     const maxLevels = 4;
     let targetWord = "";
-    let currentGuess = "";
-    let selectedOrbs = [];
+    let currentLetters = [];
+    let orbs = [];
+    let selectedIndex = null;
+    let isAnimating = false;
 
     const wordBank = {
       1: ["SUN", "ART", "FOX", "JOY"],
@@ -140,118 +165,150 @@
       4: ["PUZZLE", "ACTION", "WIZARD", "GAMING"]
     };
 
-    const gameBoard = document.getElementById('gameBoard');
+    const puzzleContainer = document.getElementById('puzzleContainer');
     const wireLayer = document.getElementById('wireLayer');
+    const orbLayer = document.getElementById('orbLayer');
     const levelDisplay = document.getElementById('levelDisplay');
     const flavorDisplay = document.getElementById('flavorDisplay');
     const guessDisplay = document.getElementById('guessDisplay');
+    const startMarker = document.getElementById('startMarker');
 
     function startLevel(level) {
-      currentGuess = "";
-      guessDisplay.textContent = "";
-      selectedOrbs = [];
-      
-      const dots = document.querySelectorAll('.dot');
-      dots.forEach(dot => dot.remove());
-      
-      while (wireLayer.firstChild) {
-        wireLayer.removeChild(wireLayer.firstChild);
-      }
+      isAnimating = false;
+      selectedIndex = null;
+      orbLayer.innerHTML = '';
+      wireLayer.innerHTML = '';
+      orbs = [];
       
       const wordOptions = wordBank[level];
       targetWord = wordOptions[Math.floor(Math.random() * wordOptions.length)];
       
       levelDisplay.textContent = `Level ${level}`;
-      flavorDisplay.textContent = `Spell the ${targetWord.length}-letter word!`;
+      flavorDisplay.textContent = `Swap orbs to spell a ${targetWord.length}-letter word.`;
 
-      const scrambledLetters = targetWord.split('').sort(() => 0.5 - Math.random());
+      // Scramble letters, ensuring it's not solved initially
+      let scrambled;
+      do {
+        scrambled = targetWord.split('').sort(() => 0.5 - Math.random());
+      } while (scrambled.join('') === targetWord);
+      
+      currentLetters = scrambled;
 
-      scrambledLetters.forEach(letter => {
-        createOrb(letter);
-      });
+      const n = targetWord.length;
+      const radius = 130; // Distance from center
+      const centerX = 200;
+      const centerY = 200;
+
+      // Draw the static connecting wire (polygon)
+      const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      let points = "";
+
+      for (let i = 0; i < n; i++) {
+        // Start angle at -90 degrees (12 o'clock position)
+        const angle = (i * 2 * Math.PI) / n - (Math.PI / 2); 
+        const cx = centerX + radius * Math.cos(angle);
+        const cy = centerY + radius * Math.sin(angle);
+        
+        points += `${cx},${cy} `;
+
+        const dot = document.createElement('div');
+        dot.classList.add('dot');
+        dot.style.left = `${cx - 25}px`; // Center the 50px dot
+        dot.style.top = `${cy - 25}px`;
+        
+        dot.addEventListener('click', () => handleOrbClick(i));
+        
+        orbLayer.appendChild(dot);
+        orbs.push(dot);
+      }
+
+      polygon.setAttribute('points', points.trim());
+      polygon.setAttribute('fill', 'none');
+      polygon.setAttribute('stroke', '#3498db');
+      polygon.setAttribute('stroke-width', '4');
+      polygon.setAttribute('stroke-linejoin', 'round');
+      
+      wireLayer.appendChild(polygon);
+
+      renderOrbs();
     }
 
-    function createOrb(letter) {
-      const dot = document.createElement('div');
-      dot.classList.add('dot');
-      dot.textContent = letter;
-      
-      const x = Math.random() * 310 + 20; 
-      const y = Math.random() * 310 + 20;
-      
-      dot.style.left = `${x}px`;
-      dot.style.top = `${y}px`;
-      
-      const centerX = x + 25;
-      const centerY = y + 25;
-      
-      dot.addEventListener('click', () => {
-        dot.classList.add('selected');
-        currentGuess += letter;
-        guessDisplay.textContent = currentGuess;
+    function handleOrbClick(index) {
+      if (isAnimating) return; // Prevent clicking during win animation
+
+      if (selectedIndex === null) {
+        // Select first orb
+        selectedIndex = index;
+      } else if (selectedIndex === index) {
+        // Deselect if clicking the same orb
+        selectedIndex = null;
+      } else {
+        // Swap letters
+        const temp = currentLetters[selectedIndex];
+        currentLetters[selectedIndex] = currentLetters[index];
+        currentLetters[index] = temp;
+        selectedIndex = null; // Reset selection after swap
         
-        selectedOrbs.push({ x: centerX, y: centerY });
-        drawWires();
-        
+        renderOrbs();
         checkWinCondition();
-      });
+        return;
+      }
       
-      gameBoard.appendChild(dot);
+      renderOrbs();
     }
 
-    function drawWires() {
-      while (wireLayer.firstChild) {
-        wireLayer.removeChild(wireLayer.firstChild);
-      }
-
-      for (let i = 0; i < selectedOrbs.length - 1; i++) {
-        const start = selectedOrbs[i];
-        const end = selectedOrbs[i + 1];
+    function renderOrbs() {
+      orbs.forEach((dot, i) => {
+        dot.textContent = currentLetters[i];
         
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', start.x);
-        line.setAttribute('y1', start.y);
-        line.setAttribute('x2', end.x);
-        line.setAttribute('y2', end.y);
-        line.setAttribute('stroke', '#2ecc71');
-        line.setAttribute('stroke-width', '4');
-        line.setAttribute('stroke-linecap', 'round');
-        
-        wireLayer.appendChild(line);
-      }
+        if (i === selectedIndex) {
+          dot.classList.add('selected');
+        } else {
+          dot.classList.remove('selected');
+        }
+      });
+      
+      // Show current spelling clockwise from the top
+      guessDisplay.textContent = currentLetters.join('');
     }
 
     function checkWinCondition() {
-      if (currentGuess.length === targetWord.length) {
-        if (currentGuess === targetWord) {
-          setTimeout(() => {
-            if (currentLevel < maxLevels) {
-              currentLevel++;
-              startLevel(currentLevel);
-            } else {
-              levelDisplay.textContent = "You Win!";
-              flavorDisplay.textContent = "You are a word master.";
-              guessDisplay.textContent = "🎉🎉🎉";
-              
-              const dots = document.querySelectorAll('.dot');
-              dots.forEach(dot => dot.remove());
-              while (wireLayer.firstChild) {
-                wireLayer.removeChild(wireLayer.firstChild);
-              }
-            }
-          }, 500); 
-        } else {
-          guessDisplay.textContent = "TRY AGAIN";
-          guessDisplay.style.color = "#e74c3c"; 
+      if (currentLetters.join('') === targetWord) {
+        isAnimating = true;
+        
+        // Visual success cues
+        guessDisplay.style.color = "#2ecc71";
+        const polygon = wireLayer.querySelector('polygon');
+        if (polygon) polygon.setAttribute('stroke', '#2ecc71');
+        
+        orbs.forEach(dot => {
+          dot.style.backgroundColor = "#2ecc71";
+          dot.style.boxShadow = "0 0 20px rgba(46, 204, 113, 0.9)";
+        });
+
+        puzzleContainer.classList.add('solved');
+
+        setTimeout(() => {
+          // Reset UI
+          puzzleContainer.classList.remove('solved');
+          guessDisplay.style.color = "#3498db";
           
-          setTimeout(() => {
-            guessDisplay.style.color = "#3498db"; 
-            startLevel(currentLevel); 
-          }, 1000);
-        }
+          if (currentLevel < maxLevels) {
+            currentLevel++;
+            startLevel(currentLevel);
+          } else {
+            levelDisplay.textContent = "You Win!";
+            flavorDisplay.textContent = "You are a word master.";
+            guessDisplay.textContent = "🎉🎉🎉";
+            orbLayer.innerHTML = '';
+            wireLayer.innerHTML = '';
+            startMarker.style.display = 'none';
+          }
+        }, 1200); // Matches CSS animation duration
       }
     }
 
+    // Initialize game
     startLevel(currentLevel);
   </script>
 </body>
