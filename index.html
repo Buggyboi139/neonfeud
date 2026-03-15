@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Word Orb Puzzle - Circular Swap</title>
+  <title>Word Orb Puzzle - Drag & Drop</title>
   <style>
     body {
       margin: 0;
@@ -55,7 +55,7 @@
       width: 400px;
       height: 400px;
       background: #1a1a24;
-      border-radius: 50%; /* Make the board circular to match the vibe */
+      border-radius: 50%;
       box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 30px rgba(0,0,0,0.5);
       border: 1px solid #2a2a35;
     }
@@ -119,14 +119,16 @@
       user-select: none;
       z-index: 2;
       transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+      touch-action: none; /* Crucial for preventing mobile scrolling while dragging */
     }
 
-    .dot:hover {
+    /* Only apply hover scale if not being dragged */
+    .dot:hover:not(.dragging) {
       transform: scale(1.1);
     }
 
     .dot.selected {
-      background-color: #e67e22; /* Orange highlight for the first clicked orb */
+      background-color: #e67e22;
       box-shadow: 0 0 20px rgba(230, 126, 34, 0.9);
       transform: scale(1.1);
     }
@@ -136,7 +138,7 @@
 
   <div class="game-header">
     <h1 class="level-text" id="levelDisplay">Level 1</h1>
-    <p class="flavor-text" id="flavorDisplay">Swap orbs to spell the word clockwise.</p>
+    <p class="flavor-text" id="flavorDisplay">Drag or tap orbs to spell the word clockwise.</p>
   </div>
 
   <div class="guess-display" id="guessDisplay"></div> 
@@ -155,8 +157,17 @@
     let targetWord = "";
     let currentLetters = [];
     let orbs = [];
+    let orbPositions = [];
     let selectedIndex = null;
     let isAnimating = false;
+
+    // Drag state variables
+    let activeDragIndex = null;
+    let isDragging = false;
+    let startPointerX = 0;
+    let startPointerY = 0;
+    let currentTranslateX = 0;
+    let currentTranslateY = 0;
 
     const wordBank = {
       1: ["SUN", "ART", "FOX", "JOY"],
@@ -176,17 +187,20 @@
     function startLevel(level) {
       isAnimating = false;
       selectedIndex = null;
+      activeDragIndex = null;
+      isDragging = false;
+      
       orbLayer.innerHTML = '';
       wireLayer.innerHTML = '';
       orbs = [];
+      orbPositions = [];
       
       const wordOptions = wordBank[level];
       targetWord = wordOptions[Math.floor(Math.random() * wordOptions.length)];
       
       levelDisplay.textContent = `Level ${level}`;
-      flavorDisplay.textContent = `Swap orbs to spell a ${targetWord.length}-letter word.`;
+      flavorDisplay.textContent = `Spell a ${targetWord.length}-letter word.`;
 
-      // Scramble letters, ensuring it's not solved initially
       let scrambled;
       do {
         scrambled = targetWord.split('').sort(() => 0.5 - Math.random());
@@ -195,28 +209,27 @@
       currentLetters = scrambled;
 
       const n = targetWord.length;
-      const radius = 130; // Distance from center
+      const radius = 130; 
       const centerX = 200;
       const centerY = 200;
 
-      // Draw the static connecting wire (polygon)
       const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
       let points = "";
 
       for (let i = 0; i < n; i++) {
-        // Start angle at -90 degrees (12 o'clock position)
         const angle = (i * 2 * Math.PI) / n - (Math.PI / 2); 
         const cx = centerX + radius * Math.cos(angle);
         const cy = centerY + radius * Math.sin(angle);
         
         points += `${cx},${cy} `;
+        orbPositions.push({ cx, cy });
 
         const dot = document.createElement('div');
         dot.classList.add('dot');
-        dot.style.left = `${cx - 25}px`; // Center the 50px dot
+        dot.style.left = `${cx - 25}px`; 
         dot.style.top = `${cy - 25}px`;
         
-        dot.addEventListener('click', () => handleOrbClick(i));
+        setupDragAndDrop(dot, i);
         
         orbLayer.appendChild(dot);
         orbs.push(dot);
@@ -233,42 +246,133 @@
       renderOrbs();
     }
 
-    function handleOrbClick(index) {
-      if (isAnimating) return; // Prevent clicking during win animation
+    function setupDragAndDrop(dot, i) {
+      dot.addEventListener('pointerdown', (e) => {
+        if (isAnimating) return;
+        
+        activeDragIndex = i;
+        isDragging = false;
+        startPointerX = e.clientX;
+        startPointerY = e.clientY;
+        
+        dot.style.transition = 'none'; // Disable transition for smooth dragging
+        dot.style.zIndex = 100;
+        dot.setPointerCapture(e.pointerId);
+      });
 
+      dot.addEventListener('pointermove', (e) => {
+        if (activeDragIndex !== i) return;
+        
+        const dx = e.clientX - startPointerX;
+        const dy = e.clientY - startPointerY;
+        
+        // Threshold to distinguish a click from a drag
+        if (!isDragging && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+          isDragging = true;
+          dot.classList.add('dragging');
+          if (selectedIndex !== null && selectedIndex !== i) {
+            selectedIndex = null; // Clear tap selection if we start dragging
+            renderOrbs();
+          }
+        }
+
+        if (isDragging) {
+          dot.style.transform = `translate(${dx}px, ${dy}px) scale(1.1)`;
+          currentTranslateX = dx;
+          currentTranslateY = dy;
+        }
+      });
+
+      dot.addEventListener('pointerup', (e) => {
+        if (activeDragIndex !== i) return;
+        
+        dot.releasePointerCapture(e.pointerId);
+        activeDragIndex = null;
+        dot.classList.remove('dragging');
+        
+        // Reset styles
+        dot.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease';
+        dot.style.transform = '';
+        dot.style.zIndex = 2;
+
+        if (!isDragging) {
+          handleOrbTap(i);
+        } else {
+          handleOrbDrop(i, currentTranslateX, currentTranslateY);
+        }
+        
+        isDragging = false;
+        currentTranslateX = 0;
+        currentTranslateY = 0;
+      });
+
+      // Handle edge cases where the pointer interaction is cancelled
+      dot.addEventListener('pointercancel', (e) => {
+        if (activeDragIndex !== i) return;
+        dot.releasePointerCapture(e.pointerId);
+        activeDragIndex = null;
+        isDragging = false;
+        dot.classList.remove('dragging');
+        dot.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease';
+        dot.style.transform = '';
+        dot.style.zIndex = 2;
+      });
+    }
+
+    function handleOrbTap(index) {
       if (selectedIndex === null) {
-        // Select first orb
         selectedIndex = index;
       } else if (selectedIndex === index) {
-        // Deselect if clicking the same orb
-        selectedIndex = null;
+        selectedIndex = null; // Deselect
       } else {
-        // Swap letters
-        const temp = currentLetters[selectedIndex];
-        currentLetters[selectedIndex] = currentLetters[index];
-        currentLetters[index] = temp;
-        selectedIndex = null; // Reset selection after swap
-        
-        renderOrbs();
-        checkWinCondition();
-        return;
+        swapLetters(selectedIndex, index);
+        selectedIndex = null; 
       }
-      
       renderOrbs();
+    }
+
+    function handleOrbDrop(draggedIdx, dx, dy) {
+      const startPos = orbPositions[draggedIdx];
+      const dropX = startPos.cx + dx;
+      const dropY = startPos.cy + dy;
+
+      let closestIdx = -1;
+      let minDistance = 50; // Distance threshold to snap and swap
+
+      for (let i = 0; i < orbPositions.length; i++) {
+        if (i === draggedIdx) continue;
+        const pos = orbPositions[i];
+        const dist = Math.hypot(dropX - pos.cx, dropY - pos.cy);
+        
+        if (dist < minDistance) {
+          minDistance = dist;
+          closestIdx = i;
+        }
+      }
+
+      if (closestIdx !== -1) {
+        swapLetters(draggedIdx, closestIdx);
+        selectedIndex = null; 
+      }
+      renderOrbs(); // Re-render to snap back and show new letters
+    }
+
+    function swapLetters(idx1, idx2) {
+      const temp = currentLetters[idx1];
+      currentLetters[idx1] = currentLetters[idx2];
+      currentLetters[idx2] = temp;
+      checkWinCondition();
     }
 
     function renderOrbs() {
       orbs.forEach((dot, i) => {
         dot.textContent = currentLetters[i];
-        
-        if (i === selectedIndex) {
+        if (i === selectedIndex && !isAnimating) {
           dot.classList.add('selected');
         } else {
           dot.classList.remove('selected');
         }
       });
-      
-      // Show current spelling clockwise from the top
       guessDisplay.textContent = currentLetters.join('');
     }
 
@@ -276,12 +380,12 @@
       if (currentLetters.join('') === targetWord) {
         isAnimating = true;
         
-        // Visual success cues
         guessDisplay.style.color = "#2ecc71";
         const polygon = wireLayer.querySelector('polygon');
         if (polygon) polygon.setAttribute('stroke', '#2ecc71');
         
         orbs.forEach(dot => {
+          dot.classList.remove('selected');
           dot.style.backgroundColor = "#2ecc71";
           dot.style.boxShadow = "0 0 20px rgba(46, 204, 113, 0.9)";
         });
@@ -289,7 +393,6 @@
         puzzleContainer.classList.add('solved');
 
         setTimeout(() => {
-          // Reset UI
           puzzleContainer.classList.remove('solved');
           guessDisplay.style.color = "#3498db";
           
@@ -304,11 +407,10 @@
             wireLayer.innerHTML = '';
             startMarker.style.display = 'none';
           }
-        }, 1200); // Matches CSS animation duration
+        }, 1200); 
       }
     }
 
-    // Initialize game
     startLevel(currentLevel);
   </script>
 </body>
