@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Word Orb Puzzle - Drag & Drop</title>
+  <title>Word Orb Puzzle - Dynamic Wires</title>
   <style>
     body {
       margin: 0;
@@ -119,10 +119,9 @@
       user-select: none;
       z-index: 2;
       transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-      touch-action: none; /* Crucial for preventing mobile scrolling while dragging */
+      touch-action: none; 
     }
 
-    /* Only apply hover scale if not being dragged */
     .dot:hover:not(.dragging) {
       transform: scale(1.1);
     }
@@ -137,7 +136,7 @@
 <body>
 
   <div class="game-header">
-    <h1 class="level-text" id="levelDisplay">Level 1</h1>
+    <h1 class="level-text" id="levelDisplay">Level 1 - 1</h1>
     <p class="flavor-text" id="flavorDisplay">Drag or tap orbs to spell the word clockwise.</p>
   </div>
 
@@ -153,15 +152,20 @@
 
   <script>
     let currentLevel = 1;
-    const maxLevels = 4;
+    let currentStage = 1;
+    const maxLevels = 5;
+    const stagesPerLevel = 5;
+    
     let targetWord = "";
     let currentLetters = [];
+    let activeLevelWords = [];
+    
     let orbs = [];
     let orbPositions = [];
     let selectedIndex = null;
     let isAnimating = false;
 
-    // Drag state variables
+    // Drag state
     let activeDragIndex = null;
     let isDragging = false;
     let startPointerX = 0;
@@ -169,11 +173,13 @@
     let currentTranslateX = 0;
     let currentTranslateY = 0;
 
+    // 5 levels, at least 5 words each
     const wordBank = {
-      1: ["SUN", "ART", "FOX", "JOY"],
-      2: ["PLAY", "EPIC", "HERO", "STAR"],
-      3: ["MAGIC", "LOGIC", "BRAIN", "POWER"],
-      4: ["PUZZLE", "ACTION", "WIZARD", "GAMING"]
+      1: ["SUN", "ART", "FOX", "JOY", "CAT", "DOG", "BUG", "HAT"],       // 3 letters
+      2: ["PLAY", "EPIC", "HERO", "STAR", "MOON", "BIRD", "FIRE", "WIND"], // 4 letters
+      3: ["MAGIC", "LOGIC", "BRAIN", "POWER", "LIGHT", "WATER", "EARTH", "SPACE"], // 5 letters
+      4: ["PUZZLE", "ACTION", "WIZARD", "GAMING", "PLANET", "ROCKET", "CASTLE", "DRAGON"], // 6 letters
+      5: ["MYSTERY", "JOURNEY", "PHOENIX", "CRYSTAL", "VOLCANO", "WARRIOR", "MONSTER", "MACHINE"] // 7 letters
     };
 
     const puzzleContainer = document.getElementById('puzzleContainer');
@@ -184,7 +190,7 @@
     const guessDisplay = document.getElementById('guessDisplay');
     const startMarker = document.getElementById('startMarker');
 
-    function startLevel(level) {
+    function startLevel() {
       isAnimating = false;
       selectedIndex = null;
       activeDragIndex = null;
@@ -195,10 +201,14 @@
       orbs = [];
       orbPositions = [];
       
-      const wordOptions = wordBank[level];
-      targetWord = wordOptions[Math.floor(Math.random() * wordOptions.length)];
+      // Shuffle words when starting a new major level
+      if (currentStage === 1) {
+        activeLevelWords = [...wordBank[currentLevel]].sort(() => 0.5 - Math.random());
+      }
       
-      levelDisplay.textContent = `Level ${level}`;
+      targetWord = activeLevelWords[currentStage - 1];
+      
+      levelDisplay.textContent = `Level ${currentLevel} - ${currentStage}`;
       flavorDisplay.textContent = `Spell a ${targetWord.length}-letter word.`;
 
       let scrambled;
@@ -214,14 +224,12 @@
       const centerY = 200;
 
       const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-      let points = "";
 
       for (let i = 0; i < n; i++) {
         const angle = (i * 2 * Math.PI) / n - (Math.PI / 2); 
         const cx = centerX + radius * Math.cos(angle);
         const cy = centerY + radius * Math.sin(angle);
         
-        points += `${cx},${cy} `;
         orbPositions.push({ cx, cy });
 
         const dot = document.createElement('div');
@@ -235,15 +243,34 @@
         orbs.push(dot);
       }
 
-      polygon.setAttribute('points', points.trim());
       polygon.setAttribute('fill', 'none');
       polygon.setAttribute('stroke', '#3498db');
       polygon.setAttribute('stroke-width', '4');
       polygon.setAttribute('stroke-linejoin', 'round');
-      
       wireLayer.appendChild(polygon);
 
+      updateWires(); // Initial wire draw
       renderOrbs();
+    }
+
+    // Dynamically redraws the SVG polygon
+    function updateWires(dragIdx = -1, dx = 0, dy = 0) {
+      let points = "";
+      for (let i = 0; i < orbPositions.length; i++) {
+        let x = orbPositions[i].cx;
+        let y = orbPositions[i].cy;
+        
+        if (i === dragIdx) {
+          x += dx;
+          y += dy;
+        }
+        points += `${x},${y} `;
+      }
+      
+      const polygon = wireLayer.querySelector('polygon');
+      if (polygon) {
+        polygon.setAttribute('points', points.trim());
+      }
     }
 
     function setupDragAndDrop(dot, i) {
@@ -255,7 +282,7 @@
         startPointerX = e.clientX;
         startPointerY = e.clientY;
         
-        dot.style.transition = 'none'; // Disable transition for smooth dragging
+        dot.style.transition = 'none'; 
         dot.style.zIndex = 100;
         dot.setPointerCapture(e.pointerId);
       });
@@ -266,12 +293,11 @@
         const dx = e.clientX - startPointerX;
         const dy = e.clientY - startPointerY;
         
-        // Threshold to distinguish a click from a drag
         if (!isDragging && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
           isDragging = true;
           dot.classList.add('dragging');
           if (selectedIndex !== null && selectedIndex !== i) {
-            selectedIndex = null; // Clear tap selection if we start dragging
+            selectedIndex = null; 
             renderOrbs();
           }
         }
@@ -280,6 +306,7 @@
           dot.style.transform = `translate(${dx}px, ${dy}px) scale(1.1)`;
           currentTranslateX = dx;
           currentTranslateY = dy;
+          updateWires(i, dx, dy); // Update wires while dragging
         }
       });
 
@@ -290,15 +317,16 @@
         activeDragIndex = null;
         dot.classList.remove('dragging');
         
-        // Reset styles
         dot.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease';
         dot.style.transform = '';
         dot.style.zIndex = 2;
 
         if (!isDragging) {
           handleOrbTap(i);
+          updateWires(); // Snap wires back instantly
         } else {
           handleOrbDrop(i, currentTranslateX, currentTranslateY);
+          updateWires(); // Snap wires back after drop calculations
         }
         
         isDragging = false;
@@ -306,7 +334,6 @@
         currentTranslateY = 0;
       });
 
-      // Handle edge cases where the pointer interaction is cancelled
       dot.addEventListener('pointercancel', (e) => {
         if (activeDragIndex !== i) return;
         dot.releasePointerCapture(e.pointerId);
@@ -316,6 +343,7 @@
         dot.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease';
         dot.style.transform = '';
         dot.style.zIndex = 2;
+        updateWires();
       });
     }
 
@@ -323,7 +351,7 @@
       if (selectedIndex === null) {
         selectedIndex = index;
       } else if (selectedIndex === index) {
-        selectedIndex = null; // Deselect
+        selectedIndex = null; 
       } else {
         swapLetters(selectedIndex, index);
         selectedIndex = null; 
@@ -337,7 +365,7 @@
       const dropY = startPos.cy + dy;
 
       let closestIdx = -1;
-      let minDistance = 50; // Distance threshold to snap and swap
+      let minDistance = 50; 
 
       for (let i = 0; i < orbPositions.length; i++) {
         if (i === draggedIdx) continue;
@@ -354,7 +382,7 @@
         swapLetters(draggedIdx, closestIdx);
         selectedIndex = null; 
       }
-      renderOrbs(); // Re-render to snap back and show new letters
+      renderOrbs(); 
     }
 
     function swapLetters(idx1, idx2) {
@@ -396,12 +424,16 @@
           puzzleContainer.classList.remove('solved');
           guessDisplay.style.color = "#3498db";
           
-          if (currentLevel < maxLevels) {
+          if (currentStage < stagesPerLevel) {
+            currentStage++;
+            startLevel();
+          } else if (currentLevel < maxLevels) {
             currentLevel++;
-            startLevel(currentLevel);
+            currentStage = 1;
+            startLevel();
           } else {
             levelDisplay.textContent = "You Win!";
-            flavorDisplay.textContent = "You are a word master.";
+            flavorDisplay.textContent = "You are a true word master.";
             guessDisplay.textContent = "🎉🎉🎉";
             orbLayer.innerHTML = '';
             wireLayer.innerHTML = '';
@@ -411,7 +443,8 @@
       }
     }
 
-    startLevel(currentLevel);
+    // Boot it up
+    startLevel();
   </script>
 </body>
 </html>
