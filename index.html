@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Word Orb Puzzle - Dynamic Wires</title>
+  <title>Word Orb Puzzle - Progression Update</title>
   <style>
     body {
       margin: 0;
@@ -24,7 +24,7 @@
     }
 
     .level-text {
-      font-size: 2rem;
+      font-size: 2.2rem;
       font-weight: bold;
       letter-spacing: 2px;
       text-transform: uppercase;
@@ -33,9 +33,11 @@
     }
 
     .flavor-text {
-      font-size: 1rem;
+      font-size: 1.1rem;
       color: #aaaaaa;
       margin-top: 5px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .guess-display {
@@ -131,13 +133,84 @@
       box-shadow: 0 0 20px rgba(230, 126, 34, 0.9);
       transform: scale(1.1);
     }
+
+    /* Modal Overlay Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-content {
+      background: #1a1a24;
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      border: 1px solid #3498db;
+      box-shadow: 0 0 30px rgba(52, 152, 219, 0.3);
+      transform: translateY(20px);
+      transition: transform 0.4s ease;
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: translateY(0);
+    }
+
+    .modal-title {
+      font-size: 2.5rem;
+      color: #2ecc71;
+      margin: 0 0 10px 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .modal-text {
+      font-size: 1.2rem;
+      color: #e0e0e0;
+      margin-bottom: 30px;
+    }
+
+    .next-btn {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .next-btn:hover {
+      background: #2980b9;
+      transform: scale(1.05);
+    }
   </style>
 </head>
 <body>
 
   <div class="game-header">
-    <h1 class="level-text" id="levelDisplay">Level 1 - 1</h1>
-    <p class="flavor-text" id="flavorDisplay">Drag or tap orbs to spell the word clockwise.</p>
+    <h1 class="level-text" id="levelDisplay">Level 1</h1>
+    <p class="flavor-text" id="flavorDisplay">3-Letter Words</p>
   </div>
 
   <div class="guess-display" id="guessDisplay"></div> 
@@ -150,11 +223,19 @@
     </div>
   </div>
 
+  <div class="modal-overlay" id="levelUpModal">
+    <div class="modal-content">
+      <h2 class="modal-title" id="modalTitle">Clear!</h2>
+      <p class="modal-text" id="modalText">Difficulty increased. Get ready for 4-letter words!</p>
+      <button class="next-btn" onclick="startNextDifficulty()">Continue</button>
+    </div>
+  </div>
+
   <script>
-    let currentLevel = 1;
-    let currentStage = 1;
-    const maxLevels = 5;
-    const stagesPerLevel = 5;
+    let currentLevel = 1;         // Goes from 1 to 5
+    let currentDifficulty = 3;    // Number of letters (starts at 3)
+    const maxLevelsPerDifficulty = 5;
+    const maxDifficulty = 7;
     
     let targetWord = "";
     let currentLetters = [];
@@ -173,13 +254,13 @@
     let currentTranslateX = 0;
     let currentTranslateY = 0;
 
-    // 5 levels, at least 5 words each
+    // Word Bank mapped by word length (difficulty)
     const wordBank = {
-      1: ["SUN", "ART", "FOX", "JOY", "CAT", "DOG", "BUG", "HAT"],       // 3 letters
-      2: ["PLAY", "EPIC", "HERO", "STAR", "MOON", "BIRD", "FIRE", "WIND"], // 4 letters
-      3: ["MAGIC", "LOGIC", "BRAIN", "POWER", "LIGHT", "WATER", "EARTH", "SPACE"], // 5 letters
-      4: ["PUZZLE", "ACTION", "WIZARD", "GAMING", "PLANET", "ROCKET", "CASTLE", "DRAGON"], // 6 letters
-      5: ["MYSTERY", "JOURNEY", "PHOENIX", "CRYSTAL", "VOLCANO", "WARRIOR", "MONSTER", "MACHINE"] // 7 letters
+      3: ["SUN", "ART", "FOX", "SKY", "CAT"],
+      4: ["PLAY", "EPIC", "LUNA", "STAR", "HERO"],
+      5: ["MAGIC", "CYBER", "BRAIN", "POWER", "LIGHT"],
+      6: ["PUZZLE", "SUBARU", "WIZARD", "GAMING", "PLANET"],
+      7: ["MYSTERY", "VETERAN", "PHOENIX", "JOURNEY", "CRYSTAL"]
     };
 
     const puzzleContainer = document.getElementById('puzzleContainer');
@@ -189,6 +270,9 @@
     const flavorDisplay = document.getElementById('flavorDisplay');
     const guessDisplay = document.getElementById('guessDisplay');
     const startMarker = document.getElementById('startMarker');
+    const levelUpModal = document.getElementById('levelUpModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalText = document.getElementById('modalText');
 
     function startLevel() {
       isAnimating = false;
@@ -201,15 +285,15 @@
       orbs = [];
       orbPositions = [];
       
-      // Shuffle words when starting a new major level
-      if (currentStage === 1) {
-        activeLevelWords = [...wordBank[currentLevel]].sort(() => 0.5 - Math.random());
+      // Load and shuffle words if starting a new difficulty tier
+      if (currentLevel === 1) {
+        activeLevelWords = [...wordBank[currentDifficulty]].sort(() => 0.5 - Math.random());
       }
       
-      targetWord = activeLevelWords[currentStage - 1];
+      targetWord = activeLevelWords[currentLevel - 1];
       
-      levelDisplay.textContent = `Level ${currentLevel} - ${currentStage}`;
-      flavorDisplay.textContent = `Spell a ${targetWord.length}-letter word.`;
+      levelDisplay.textContent = `Level ${currentLevel}`;
+      flavorDisplay.textContent = `${currentDifficulty}-Letter Word`;
 
       let scrambled;
       do {
@@ -249,11 +333,10 @@
       polygon.setAttribute('stroke-linejoin', 'round');
       wireLayer.appendChild(polygon);
 
-      updateWires(); // Initial wire draw
+      updateWires();
       renderOrbs();
     }
 
-    // Dynamically redraws the SVG polygon
     function updateWires(dragIdx = -1, dx = 0, dy = 0) {
       let points = "";
       for (let i = 0; i < orbPositions.length; i++) {
@@ -306,7 +389,7 @@
           dot.style.transform = `translate(${dx}px, ${dy}px) scale(1.1)`;
           currentTranslateX = dx;
           currentTranslateY = dy;
-          updateWires(i, dx, dy); // Update wires while dragging
+          updateWires(i, dx, dy); 
         }
       });
 
@@ -323,10 +406,10 @@
 
         if (!isDragging) {
           handleOrbTap(i);
-          updateWires(); // Snap wires back instantly
+          updateWires(); 
         } else {
           handleOrbDrop(i, currentTranslateX, currentTranslateY);
-          updateWires(); // Snap wires back after drop calculations
+          updateWires(); 
         }
         
         isDragging = false;
@@ -424,26 +507,40 @@
           puzzleContainer.classList.remove('solved');
           guessDisplay.style.color = "#3498db";
           
-          if (currentStage < stagesPerLevel) {
-            currentStage++;
-            startLevel();
-          } else if (currentLevel < maxLevels) {
+          if (currentLevel < maxLevelsPerDifficulty) {
             currentLevel++;
-            currentStage = 1;
             startLevel();
           } else {
-            levelDisplay.textContent = "You Win!";
-            flavorDisplay.textContent = "You are a true word master.";
-            guessDisplay.textContent = "🎉🎉🎉";
-            orbLayer.innerHTML = '';
-            wireLayer.innerHTML = '';
-            startMarker.style.display = 'none';
+            showLevelUpModal();
           }
         }, 1200); 
       }
     }
 
-    // Boot it up
+    function showLevelUpModal() {
+      if (currentDifficulty < maxDifficulty) {
+        modalTitle.textContent = "Perfect Clear!";
+        modalText.textContent = `You've mastered ${currentDifficulty}-letter words. Get ready for ${currentDifficulty + 1} letters!`;
+        levelUpModal.classList.add('active');
+      } else {
+        modalTitle.textContent = "You Win!";
+        modalText.textContent = "You are a true word master. You've beaten the game!";
+        document.querySelector('.next-btn').style.display = 'none';
+        levelUpModal.classList.add('active');
+      }
+    }
+
+    function startNextDifficulty() {
+      levelUpModal.classList.remove('active');
+      currentDifficulty++;
+      currentLevel = 1;
+      // Slight delay to allow modal to fade out before starting
+      setTimeout(() => {
+        startLevel();
+      }, 400); 
+    }
+
+    // Start the game
     startLevel();
   </script>
 </body>
