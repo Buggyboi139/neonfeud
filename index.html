@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Word Orb Puzzle</title>
+  <title>Weave</title>
   <style>
     body {
       margin: 0;
@@ -13,7 +13,7 @@
       align-items: center;
       justify-content: center;
       font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background: linear-gradient(135deg, #121212 0%, #1e1e2f 100%);
+      background: linear-gradient(135deg, #0f0f13 0%, #1a1a24 100%);
       color: #e0e0e0;
       overflow: hidden;
       touch-action: none;
@@ -40,8 +40,8 @@
       color: #3498db;
       text-transform: uppercase;
       letter-spacing: 5px;
-      margin-bottom: 20px;
-      text-shadow: 0 0 15px rgba(52, 152, 219, 0.5);
+      margin-bottom: 40px;
+      text-shadow: 0 0 15px rgba(52, 152, 219, 0.6);
       text-align: center;
     }
 
@@ -61,12 +61,11 @@
       padding: 15px 40px;
       font-size: 1.2rem;
       font-weight: bold;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
       text-transform: uppercase;
       letter-spacing: 2px;
       transition: background 0.2s, transform 0.2s;
-      box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
     }
 
     .btn:hover {
@@ -75,24 +74,24 @@
     }
 
     .level-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 15px;
+      display: flex;
+      flex-direction: column;
       width: 100%;
-      max-width: 300px;
+      max-width: 320px;
+      gap: 15px;
     }
 
     .level-btn {
-      background: #1a1a24;
-      color: #e0e0e0;
+      background: #121218;
+      color: #ffffff;
       border: 2px solid #3498db;
-      padding: 15px;
+      padding: 18px 20px;
       font-size: 1.2rem;
       font-weight: bold;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       transition: all 0.2s;
       display: flex;
       justify-content: space-between;
@@ -106,22 +105,29 @@
     }
 
     .level-btn:disabled {
-      border-color: #2a2a35;
-      color: #555;
+      border-color: #22222a;
+      color: #44444c;
       cursor: not-allowed;
-      background: #121212;
+      background: #0a0a0d;
     }
 
     .game-header {
-      text-align: center;
-      margin-bottom: 10px;
-      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       width: 100%;
       max-width: 400px;
+      margin-bottom: 30px;
+    }
+
+    .header-titles {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .level-text {
-      font-size: 2rem;
+      font-size: 2.2rem;
       font-weight: bold;
       letter-spacing: 2px;
       text-transform: uppercase;
@@ -131,24 +137,22 @@
 
     .flavor-text {
       font-size: 1rem;
-      color: #aaaaaa;
+      color: #888890;
       margin-top: 5px;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
 
     .hint-btn {
-      position: absolute;
-      top: 0;
-      right: 10px;
       background: none;
       border: none;
       color: #f1c40f;
       font-size: 1.8rem;
       cursor: pointer;
-      opacity: 0.7;
+      opacity: 0.8;
       transition: opacity 0.2s, transform 0.2s;
       display: none;
+      width: 40px;
     }
 
     .hint-btn:hover {
@@ -157,21 +161,20 @@
     }
 
     .hint-btn:disabled {
-      color: #7f8c8d;
+      color: #555;
       cursor: default;
       opacity: 0.5;
     }
 
     .back-btn {
-      position: absolute;
-      top: 0;
-      left: 10px;
       background: none;
       border: none;
       color: #aaaaaa;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       cursor: pointer;
       transition: color 0.2s;
+      width: 40px;
+      text-align: left;
     }
 
     .back-btn:hover {
@@ -179,14 +182,14 @@
     }
 
     .guess-display {
-      font-size: clamp(2rem, 8vw, 2.5rem);
+      font-size: clamp(2.2rem, 8vw, 2.8rem);
       font-weight: bold;
-      letter-spacing: 5px;
+      letter-spacing: 8px;
       color: #3498db;
       height: 60px;
-      margin-bottom: 15px;
+      margin-bottom: 30px;
       text-transform: uppercase;
-      text-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+      text-shadow: 0 0 15px rgba(52, 152, 219, 0.6);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -194,8 +197,9 @@
 
     .loading-pulse {
       font-size: 1.2rem;
-      color: #7f8c8d;
+      color: #555;
       animation: pulse 1.5s infinite;
+      letter-spacing: 2px;
     }
 
     @keyframes pulse {
@@ -206,14 +210,14 @@
 
     .game-board {
       position: relative;
-      width: 90vw;
-      max-width: 400px;
-      height: 90vw;
-      max-height: 400px;
-      background: #1a1a24;
+      width: 85vw;
+      max-width: 380px;
+      height: 85vw;
+      max-height: 380px;
+      background: #111116;
       border-radius: 50%;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 30px rgba(0,0,0,0.5);
-      border: 1px solid #2a2a35;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.9), inset 0 0 40px rgba(0,0,0,0.6);
+      border: 1px solid #22222a;
     }
 
     #puzzleContainer {
@@ -247,30 +251,29 @@
     .start-marker {
       position: absolute;
       left: 50%;
-      top: 10%;
+      top: 12%;
       transform: translateX(-50%);
       color: #2ecc71;
-      font-size: clamp(0.6rem, 3vw, 0.8rem);
+      font-size: clamp(0.7rem, 3vw, 0.8rem);
       font-weight: bold;
       letter-spacing: 2px;
       text-transform: uppercase;
       z-index: 3;
-      text-shadow: 0 0 5px rgba(46, 204, 113, 0.5);
     }
 
     .dot {
       position: absolute;
-      width: clamp(40px, 12vw, 50px);
-      height: clamp(40px, 12vw, 50px);
+      width: clamp(45px, 14vw, 55px);
+      height: clamp(45px, 14vw, 55px);
       background-color: #3498db;
       border-radius: 50%;
-      box-shadow: 0 0 15px rgba(52, 152, 219, 0.8), inset 0 -3px 0 rgba(0,0,0,0.3);
+      box-shadow: 0 0 20px rgba(52, 152, 219, 0.6), inset 0 -4px 0 rgba(0,0,0,0.2);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: clamp(1.2rem, 5vw, 1.5rem);
+      font-size: clamp(1.4rem, 6vw, 1.8rem);
       font-weight: bold;
       user-select: none;
       z-index: 2;
@@ -284,15 +287,15 @@
 
     .dot.selected {
       background-color: #e67e22;
-      box-shadow: 0 0 20px rgba(230, 126, 34, 0.9);
+      box-shadow: 0 0 25px rgba(230, 126, 34, 0.8);
       transform: scale(1.1);
     }
 
     .dot.locked {
-      background-color: #2c3e50;
-      border: 2px solid #f1c40f;
+      background-color: #1a1a24;
+      border: 3px solid #f1c40f;
       color: #f1c40f;
-      box-shadow: 0 0 10px rgba(241, 196, 15, 0.5);
+      box-shadow: 0 0 15px rgba(241, 196, 15, 0.4);
       cursor: default;
     }
   </style>
@@ -312,16 +315,18 @@
 
   <div id="screen-game" class="screen">
     <div class="game-header">
-      <button class="back-btn" onclick="showScreen('screen-select')">⬅</button>
-      <h1 class="level-text" id="levelDisplay">Level 1</h1>
-      <p class="flavor-text" id="flavorDisplay">3-Letter Word</p>
+      <button class="back-btn" onclick="showScreen('screen-select')">←</button>
+      <div class="header-titles">
+        <h1 class="level-text" id="levelDisplay">STAGE 1</h1>
+        <p class="flavor-text" id="flavorDisplay">3-LETTER WORD</p>
+      </div>
       <button class="hint-btn" id="hintBtn" onclick="useHint()">💡</button>
     </div>
 
     <div class="guess-display" id="guessDisplay"></div> 
 
     <div class="game-board" id="gameBoard">
-      <div class="start-marker" id="startMarker" style="display: none;">Start ⬇</div>
+      <div class="start-marker" id="startMarker" style="display: none;">START ↓</div>
       <div id="puzzleContainer">
         <svg id="wireLayer"></svg>
         <div id="orbLayer"></div>
@@ -389,10 +394,10 @@
         const btn = document.createElement('button');
         btn.className = 'level-btn';
         if (i <= unlocked) {
-          btn.innerHTML = `<span>${i} Letters</span> <span>▶</span>`;
+          btn.innerHTML = `<span>${i} LETTERS</span> <span>▶</span>`;
           btn.onclick = () => initDifficulty(i);
         } else {
-          btn.innerHTML = `<span>${i} Letters</span> <span>🔒</span>`;
+          btn.innerHTML = `<span>${i} LETTERS</span> <span>🔒</span>`;
           btn.disabled = true;
         }
         grid.appendChild(btn);
@@ -433,8 +438,8 @@
       orbPositions = [];
       lockedOrbs = [];
       
-      levelDisplay.textContent = `Stage ${currentStage}`;
-      flavorDisplay.textContent = `${currentDifficulty}-Letter Word`;
+      levelDisplay.textContent = `STAGE ${currentStage}`;
+      flavorDisplay.textContent = `${currentDifficulty}-LETTER WORD`;
       
       guessDisplay.innerHTML = '<span class="loading-pulse">FETCHING...</span>';
 
@@ -452,7 +457,7 @@
       orbRadius = boardSize * 0.35; 
       const centerX = boardSize / 2;
       const centerY = boardSize / 2;
-      const dotSize = Math.max(40, Math.min(50, boardSize * 0.12));
+      const dotSize = Math.max(45, Math.min(55, boardSize * 0.14));
 
       const n = targetWord.length;
       const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
@@ -711,13 +716,15 @@
         isAnimating = true;
         
         guessDisplay.style.color = "#2ecc71";
+        guessDisplay.style.textShadow = "0 0 15px rgba(46, 204, 113, 0.6)";
+        
         const polygon = wireLayer.querySelector('polygon');
         if (polygon) polygon.setAttribute('stroke', '#2ecc71');
         
         orbs.forEach((dot) => {
           dot.className = 'dot'; 
           dot.style.backgroundColor = "#2ecc71";
-          dot.style.boxShadow = "0 0 20px rgba(46, 204, 113, 0.9)";
+          dot.style.boxShadow = "0 0 25px rgba(46, 204, 113, 0.8)";
           dot.style.border = 'none'; 
           dot.style.color = 'white'; 
         });
@@ -729,6 +736,7 @@
           setTimeout(() => {
             puzzleContainer.classList.remove('solved');
             guessDisplay.style.color = "#3498db";
+            guessDisplay.style.textShadow = "0 0 15px rgba(52, 152, 219, 0.6)";
             
             if (currentStage < maxStagesPerDifficulty) {
               currentStage++;
@@ -755,7 +763,7 @@
         orbRadius = boardSize * 0.35;
         const centerX = boardSize / 2;
         const centerY = boardSize / 2;
-        const dotSize = Math.max(40, Math.min(50, boardSize * 0.12));
+        const dotSize = Math.max(45, Math.min(55, boardSize * 0.14));
 
         for (let i = 0; i < orbPositions.length; i++) {
           const angle = (i * 2 * Math.PI) / targetWord.length - (Math.PI / 2); 
