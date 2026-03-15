@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Word Orb Puzzle - API & Hints</title>
+  <title>Word Orb Puzzle</title>
   <style>
     body {
       margin: 0;
@@ -21,7 +21,7 @@
     .game-header {
       text-align: center;
       margin-bottom: 20px;
-      position: relative; /* For positioning the hint button */
+      position: relative;
       width: 400px;
     }
 
@@ -42,19 +42,18 @@
       letter-spacing: 1px;
     }
 
-    /* Hint Button Styling */
     .hint-btn {
       position: absolute;
       top: 5px;
       right: 5px;
       background: none;
       border: none;
-      color: #f1c40f; /* Yellow for lightbulb */
+      color: #f1c40f;
       font-size: 1.8rem;
       cursor: pointer;
       opacity: 0.7;
       transition: opacity 0.2s, transform 0.2s;
-      display: none; /* Hidden during loading */
+      display: none;
     }
 
     .hint-btn:hover {
@@ -177,7 +176,6 @@
       transform: scale(1.1);
     }
 
-    /* Locked Orb Styling */
     .dot.locked {
       background-color: #2c3e50;
       border: 2px solid #f1c40f;
@@ -290,7 +288,7 @@
     
     let targetWord = "";
     let currentLetters = [];
-    let lockedOrbs = []; // Array of booleans to track locked status
+    let lockedOrbs = []; 
 
     let orbs = [];
     let orbPositions = [];
@@ -323,7 +321,6 @@
         const data = await response.json();
         return data[0].toUpperCase();
       } catch (error) {
-        console.error("API Fetch Failed, using fallback word:", error);
         const fallbacks = { 3: "BUG", 4: "CODE", 5: "CRASH", 6: "SYSTEM", 7: "NETWORK" };
         return fallbacks[length] || "TEST";
       }
@@ -338,7 +335,7 @@
       orbLayer.innerHTML = '';
       wireLayer.innerHTML = '';
       startMarker.style.display = 'none';
-      hintBtn.style.display = 'none'; // Hide hint during loading
+      hintBtn.style.display = 'none'; 
       hintBtn.disabled = false;
       orbs = [];
       orbPositions = [];
@@ -350,7 +347,7 @@
       guessDisplay.innerHTML = '<span class="loading-pulse">FETCHING...</span>';
 
       targetWord = await fetchRandomWord(currentDifficulty);
-      lockedOrbs = new Array(targetWord.length).fill(false); // Initialize all unlocked
+      lockedOrbs = new Array(targetWord.length).fill(false); 
 
       let scrambled;
       do {
@@ -391,7 +388,7 @@
       wireLayer.appendChild(polygon);
 
       startMarker.style.display = 'block'; 
-      hintBtn.style.display = 'block'; // Show hint button
+      hintBtn.style.display = 'block'; 
 
       updateWires();
       renderOrbs();
@@ -400,57 +397,59 @@
     function useHint() {
       if (isAnimating) return;
 
-      // Find available (unlocked and incorrect) indices
-      let availableIndices = [];
+      let targetIdx = -1;
+      let wrongIndices = [];
+      
       for (let i = 0; i < targetWord.length; i++) {
         if (!lockedOrbs[i] && currentLetters[i] !== targetWord[i]) {
-          availableIndices.push(i);
+          wrongIndices.push(i);
         }
       }
 
-      if (availableIndices.length === 0) {
-        // Find unlocked indices (all remaining letters are correct but unlocked)
+      if (wrongIndices.length > 0) {
+        targetIdx = wrongIndices[Math.floor(Math.random() * wrongIndices.length)];
+      } else {
+        let unlockedIndices = [];
         for (let i = 0; i < targetWord.length; i++) {
           if (!lockedOrbs[i]) {
-            availableIndices.push(i);
+            unlockedIndices.push(i);
           }
+        }
+        if (unlockedIndices.length > 0) {
+          targetIdx = unlockedIndices[Math.floor(Math.random() * unlockedIndices.length)];
         }
       }
 
-      if (availableIndices.length === 0) return; // No hints left
+      if (targetIdx === -1) return; 
 
-      // Select a random index from available
-      const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
-      
-      const neededLetter = targetWord[randomIndex];
-      
-      // Find the orb currently holding the needed letter
-      let letterIndex = currentLetters.indexOf(neededLetter);
+      const neededLetter = targetWord[targetIdx];
+      let sourceIdx = -1;
 
-      // Special case: if there are duplicate letters, find an *unlocked* one to swap
-      if (currentLetters.filter(l => l === neededLetter).length > 1) {
-        // Need to find an index 'j' such that currentLetters[j] == neededLetter AND !lockedOrbs[j]
-        // This is complex, but for simplicity, we'll take the first available letter instance.
-        // If the puzzle gets stuck with duplicate letters, this might need refinement.
+      for (let i = 0; i < currentLetters.length; i++) {
+        if (!lockedOrbs[i] && currentLetters[i] === neededLetter && i !== targetIdx) {
+          sourceIdx = i;
+          break;
+        }
       }
 
-      if (letterIndex !== -1 && letterIndex !== randomIndex) {
-          // Swap the needed letter into its correct place
-          swapLetters(randomIndex, letterIndex);
-          if (selectedIndex === letterIndex || selectedIndex === randomIndex) {
-              selectedIndex = null; // Clear selection if it was involved in the hint swap
-          }
-      } else {
-          // The letter is already in place, or something went wrong (fallback to just locking).
-          // We shouldn't hit this if availableIndices logic is robust for non-matching letters.
+      if (sourceIdx !== -1) {
+        const temp = currentLetters[targetIdx];
+        currentLetters[targetIdx] = currentLetters[sourceIdx];
+        currentLetters[sourceIdx] = temp;
       }
 
-      // Lock the orb in the correct position
-      lockedOrbs[randomIndex] = true;
-      renderOrbs(); // Re-render to show locked style and updated positions
+      lockedOrbs[targetIdx] = true;
+      selectedIndex = null; 
 
-      // Check if all are locked/correct, disable button if so
-      if (lockedOrbs.filter(l => l).length === targetWord.length - 1) {
+      renderOrbs(); 
+      checkWinCondition();
+
+      let remainingUnlocked = 0;
+      for (let i = 0; i < lockedOrbs.length; i++) {
+        if (!lockedOrbs[i]) remainingUnlocked++;
+      }
+      
+      if (remainingUnlocked <= 1) {
         hintBtn.disabled = true;
       }
     }
@@ -476,7 +475,7 @@
 
     function setupOrbInteraction(dot, i) {
       dot.addEventListener('pointerdown', (e) => {
-        if (isAnimating || lockedOrbs[i]) return; // Cannot drag locked orbs
+        if (isAnimating || lockedOrbs[i]) return; 
         
         activeDragIndex = i;
         isDragging = false;
@@ -549,7 +548,7 @@
     }
 
     function handleOrbTap(index) {
-      if (lockedOrbs[index]) return; // Cannot tap locked orbs
+      if (lockedOrbs[index]) return; 
 
       if (selectedIndex === null) {
         selectedIndex = index;
@@ -563,7 +562,7 @@
     }
 
     function handleOrbDrop(draggedIdx, dx, dy) {
-      if (lockedOrbs[draggedIdx]) return; // Safety check
+      if (lockedOrbs[draggedIdx]) return; 
 
       const startPos = orbPositions[draggedIdx];
       const dropX = startPos.cx + dx;
@@ -573,7 +572,7 @@
       let minDistance = 50; 
 
       for (let i = 0; i < orbPositions.length; i++) {
-        if (i === draggedIdx || lockedOrbs[i]) continue; // Cannot drop onto locked orbs
+        if (i === draggedIdx || lockedOrbs[i]) continue; 
         const pos = orbPositions[i];
         const dist = Math.hypot(dropX - pos.cx, dropY - pos.cy);
         
@@ -591,7 +590,7 @@
     }
 
     function swapLetters(idx1, idx2) {
-      if (lockedOrbs[idx1] || lockedOrbs[idx2]) return; // Double-check locking
+      if (lockedOrbs[idx1] || lockedOrbs[idx2]) return; 
 
       const temp = currentLetters[idx1];
       currentLetters[idx1] = currentLetters[idx2];
@@ -603,13 +602,12 @@
       orbs.forEach((dot, i) => {
         dot.textContent = currentLetters[i];
         
-        // Remove existing states
         dot.classList.remove('selected', 'locked');
 
         if (lockedOrbs[i]) {
-          dot.classList.add('locked'); // Apply locked style
+          dot.classList.add('locked'); 
         } else if (i === selectedIndex && !isAnimating) {
-          dot.classList.add('selected'); // Apply selected style
+          dot.classList.add('selected'); 
         }
       });
       guessDisplay.textContent = currentLetters.join('');
@@ -624,17 +622,17 @@
         if (polygon) polygon.setAttribute('stroke', '#2ecc71');
         
         orbs.forEach((dot, i) => {
-          dot.classList.remove('selected', 'locked'); // Clear selected/locked styles
+          dot.classList.remove('selected', 'locked'); 
           dot.style.backgroundColor = "#2ecc71";
           dot.style.boxShadow = "0 0 20px rgba(46, 204, 113, 0.9)";
           if (lockedOrbs[i]) {
-            dot.style.border = 'none'; // Clear hint border
-            dot.style.color = 'white'; // Clear hint color
+            dot.style.border = 'none'; 
+            dot.style.color = 'white'; 
           }
         });
 
         puzzleContainer.classList.add('solved');
-        hintBtn.style.display = 'none'; // Hide hints on win
+        hintBtn.style.display = 'none'; 
 
         setTimeout(() => {
           puzzleContainer.classList.remove('solved');
