@@ -3,18 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Neon Feud - Ultimate Glass</title>
+<title>Neon Feud - Black Glass Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800;900&display=swap" rel="stylesheet">
 <style>
     :root {
-        --bg-solid: #030005;
+        --bg-solid: #020202;
         --purple-light: #b066ff;
-        --purple-mid: #6b1ba8;
-        --purple-dark: #2a004a;
         --cyan: #00e5ff;
         --green: #00ff88;
         --red: #ff2a5f;
-        --border-shine: rgba(176, 102, 255, 0.5);
+        --yellow: #ffb300;
+        --silver-light: rgba(220, 220, 230, 0.2);
+        --silver-border: rgba(255, 255, 255, 0.12);
+        --glass-top: rgba(45, 45, 50, 0.7);
+        --glass-bottom: rgba(10, 10, 12, 0.95);
     }
 
     * { box-sizing: border-box; font-family: 'Outfit', sans-serif; margin: 0; padding: 0; }
@@ -34,10 +36,10 @@
         position: fixed;
         width: 70vw;
         height: 70vw;
-        background: radial-gradient(circle, rgba(138, 43, 226, 0.35) 0%, rgba(0, 0, 0, 0) 65%);
+        background: radial-gradient(circle, rgba(140, 50, 255, 0.4) 0%, rgba(0, 0, 0, 0) 60%);
         border-radius: 50%;
         z-index: -1;
-        filter: blur(60px);
+        filter: blur(80px);
         pointer-events: none;
         animation: roam 25s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -50,13 +52,13 @@
     }
 
     .glass {
-        background: linear-gradient(145deg, rgba(60, 15, 95, 0.3) 0%, rgba(0, 0, 0, 0.8) 100%);
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
-        border: 1px solid rgba(176, 102, 255, 0.2);
-        border-top: 1px solid var(--border-shine);
+        background: linear-gradient(145deg, var(--glass-top) 0%, var(--glass-bottom) 100%);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--silver-border);
+        border-top: 1px solid var(--silver-light);
         border-radius: 24px;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(176, 102, 255, 0.05);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), inset 0 1px 10px rgba(255, 255, 255, 0.03);
     }
 
     .screen { display: none; width: 95%; max-width: 1000px; margin: 30px auto; padding: 35px; animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
@@ -77,16 +79,16 @@
         line-height: 1;
     }
 
-    .logo span { background: linear-gradient(to right, #e2b3ff, var(--purple-light)); -webkit-background-clip: text; color: transparent; text-shadow: 0 0 20px rgba(176, 102, 255, 0.5); }
+    .logo span { background: linear-gradient(to right, var(--cyan), var(--purple-light)); -webkit-background-clip: text; color: transparent; text-shadow: 0 0 20px rgba(0, 229, 255, 0.3); }
 
-    h2 { text-align: center; color: #d4b3ff; font-weight: 300; font-size: 1.5rem; margin-bottom: 30px; }
+    h2 { text-align: center; color: #a0a0b0; font-weight: 300; font-size: 1.5rem; margin-bottom: 30px; letter-spacing: 2px; }
 
     .btn-grid { display: flex; flex-direction: column; gap: 15px; max-width: 350px; margin: 0 auto; }
 
     button {
-        background: linear-gradient(135deg, rgba(90, 20, 140, 0.5), rgba(10, 0, 20, 0.9));
-        border: 1px solid var(--purple-mid);
-        border-top: 1px solid var(--purple-light);
+        background: linear-gradient(135deg, rgba(50, 50, 55, 0.6), rgba(15, 15, 18, 0.9));
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
         color: #fff;
         padding: 18px 24px;
         border-radius: 16px;
@@ -99,9 +101,10 @@
     }
 
     button:hover:not(:disabled) {
-        background: linear-gradient(135deg, rgba(130, 40, 190, 0.6), rgba(30, 0, 50, 0.9));
+        background: linear-gradient(135deg, rgba(70, 70, 80, 0.7), rgba(25, 25, 30, 0.9));
         transform: translateY(-4px);
-        box-shadow: 0 10px 25px rgba(176, 102, 255, 0.4);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 229, 255, 0.2);
+        border-color: var(--cyan);
     }
 
     button:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -113,31 +116,33 @@
     .score-pill {
         padding: 12px 24px;
         border-radius: 12px;
-        background: linear-gradient(180deg, rgba(50, 10, 80, 0.6), rgba(0,0,0,0.8));
-        border: 1px solid rgba(176, 102, 255, 0.2);
+        background: linear-gradient(180deg, rgba(40, 40, 45, 0.8), rgba(0,0,0,0.9));
+        border: 1px solid var(--silver-border);
         font-weight: 800;
         font-size: 1.2rem;
         transition: all 0.3s;
+        color: #ccc;
     }
 
     .active-team {
-        background: linear-gradient(180deg, rgba(176, 102, 255, 0.3), rgba(60, 15, 95, 0.8));
-        border-color: var(--purple-light);
-        box-shadow: 0 0 20px rgba(176, 102, 255, 0.4);
+        background: linear-gradient(180deg, rgba(0, 229, 255, 0.15), rgba(0, 0, 0, 0.8));
+        border-color: var(--cyan);
+        color: var(--cyan);
+        box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
         transform: scale(1.05);
     }
 
-    #strikes-display { font-size: 2.5rem; color: var(--red); font-weight: 900; letter-spacing: 5px; text-shadow: 0 0 20px var(--red); min-width: 80px; text-align: right; }
+    #strikes-display { font-size: 2.5rem; color: var(--red); font-weight: 900; letter-spacing: 5px; text-shadow: 0 0 20px rgba(255, 42, 95, 0.6); min-width: 80px; text-align: right; }
 
-    .query-box { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; text-align: center; padding: 30px; margin-bottom: 25px; border-top: 4px solid var(--purple-light); }
+    .query-box { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 800; text-align: center; padding: 30px; margin-bottom: 25px; border-top: 4px solid var(--cyan); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); }
 
     .board-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom: 30px; }
 
     .board-row {
         display: flex;
         align-items: center;
-        background: linear-gradient(90deg, rgba(40, 5, 60, 0.6) 0%, rgba(0, 0, 0, 0.9) 100%);
-        border: 1px solid rgba(176, 102, 255, 0.15);
+        background: linear-gradient(90deg, rgba(30, 30, 35, 0.8) 0%, rgba(5, 5, 8, 0.95) 100%);
+        border: 1px solid var(--silver-border);
         border-radius: 16px;
         padding: 15px 20px;
         font-size: 1.4rem;
@@ -147,10 +152,10 @@
         overflow: hidden;
     }
 
-    .board-row.revealed { background: linear-gradient(90deg, rgba(0, 255, 136, 0.2), rgba(0,0,0,0.8)); border-color: var(--green); transform: scale(1.02); }
-    .board-row.missed { background: linear-gradient(90deg, rgba(255, 42, 95, 0.2), rgba(0,0,0,0.8)); border-color: rgba(255, 42, 95, 0.3); opacity: 0.7; }
+    .board-row.revealed { background: linear-gradient(90deg, rgba(0, 255, 136, 0.15), rgba(0,0,0,0.9)); border-color: var(--green); transform: scale(1.02); }
+    .board-row.missed { background: linear-gradient(90deg, rgba(255, 42, 95, 0.15), rgba(0,0,0,0.9)); border-color: rgba(255, 42, 95, 0.3); opacity: 0.7; }
 
-    .rank { background: linear-gradient(135deg, var(--purple-light), var(--purple-dark)); color: #fff; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 900; margin-right: 15px; font-size: 1.1rem; border: 1px solid rgba(255,255,255,0.2); }
+    .rank { background: linear-gradient(135deg, var(--cyan), #0077ff); color: #fff; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 900; margin-right: 15px; font-size: 1.1rem; box-shadow: 0 0 10px rgba(0, 229, 255, 0.4); }
     .ans-text { flex: 1; letter-spacing: 1px; }
     .ans-pts { color: var(--green); font-weight: 900; font-size: 1.5rem; text-shadow: 0 0 10px rgba(0, 255, 136, 0.4); }
 
@@ -159,20 +164,21 @@
     .choices-area { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; padding: 25px; }
 
     .choice-btn { min-height: 80px; display: flex; align-items: center; justify-content: center; padding: 15px; font-size: 1.1rem; line-height: 1.3; }
-    .choice-btn.correct { background: linear-gradient(135deg, rgba(0, 255, 136, 0.3), rgba(0, 0, 0, 0.8)) !important; border-color: var(--green) !important; color: var(--green); box-shadow: 0 0 20px rgba(0, 255, 136, 0.3); }
-    .choice-btn.wrong { background: linear-gradient(135deg, rgba(255, 42, 95, 0.3), rgba(0, 0, 0, 0.8)) !important; border-color: var(--red) !important; color: var(--red); box-shadow: 0 0 20px rgba(255, 42, 95, 0.3); animation: shake 0.4s; }
+    .choice-btn.correct { background: linear-gradient(135deg, rgba(0, 255, 136, 0.25), rgba(0, 0, 0, 0.9)) !important; border-color: var(--green) !important; color: var(--green); box-shadow: 0 0 20px rgba(0, 255, 136, 0.2); }
+    .choice-btn.wrong { background: linear-gradient(135deg, rgba(255, 42, 95, 0.25), rgba(0, 0, 0, 0.9)) !important; border-color: var(--red) !important; color: var(--red); box-shadow: 0 0 20px rgba(255, 42, 95, 0.2); animation: shake 0.4s; }
 
-    #next-round-btn, #play-again-btn { background: linear-gradient(45deg, var(--purple-mid), var(--purple-light)); border: 1px solid #fff; width: 100%; max-width: 400px; margin: 20px auto 0; display: none; padding: 20px; font-size: 1.4rem; box-shadow: 0 10px 30px rgba(176, 102, 255, 0.3); }
+    #next-round-btn, #play-again-btn { background: linear-gradient(45deg, var(--cyan), #0077ff); border: none; width: 100%; max-width: 400px; margin: 20px auto 0; display: none; padding: 20px; font-size: 1.4rem; box-shadow: 0 10px 30px rgba(0, 229, 255, 0.3); color: #fff; }
     #play-again-btn { display: block; }
+    #next-round-btn:hover, #play-again-btn:hover { background: linear-gradient(45deg, #0077ff, var(--cyan)); }
 
-    .strike-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 0, 50, 0.15); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+    .strike-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 0, 50, 0.1); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
     .strike-overlay.active { opacity: 1; animation: flashRed 0.8s ease-out forwards; }
     .strike-mark { font-size: 25vw; color: var(--red); font-weight: 900; text-shadow: 0 0 50px var(--red); transform: scale(0.5); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     .strike-overlay.active .strike-mark { transform: scale(1); }
 
     .final-standings { display: flex; flex-direction: column; gap: 20px; margin-bottom: 40px; }
-    .final-row { display: flex; justify-content: space-between; font-size: 2rem; padding: 20px 30px; background: linear-gradient(90deg, rgba(50, 10, 80, 0.5), rgba(0,0,0,0.8)); border-radius: 16px; border-left: 5px solid var(--purple-light); }
-    .winner-row { border-left-color: var(--green); background: linear-gradient(90deg, rgba(0, 255, 136, 0.2), rgba(0,0,0,0.8)); box-shadow: 0 0 30px rgba(0, 255, 136, 0.2); transform: scale(1.05); font-weight: 900; }
+    .final-row { display: flex; justify-content: space-between; font-size: 2rem; padding: 20px 30px; background: linear-gradient(90deg, rgba(40, 40, 45, 0.6), rgba(0,0,0,0.9)); border-radius: 16px; border-left: 5px solid var(--cyan); border-right: 1px solid var(--silver-border); border-top: 1px solid var(--silver-border); border-bottom: 1px solid var(--silver-border); }
+    .winner-row { border-left-color: var(--yellow); background: linear-gradient(90deg, rgba(255, 179, 0, 0.15), rgba(0,0,0,0.9)); box-shadow: 0 0 30px rgba(255, 179, 0, 0.15); transform: scale(1.05); font-weight: 900; color: var(--yellow); }
 
     @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
     @keyframes flashRed { 0% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; } }
@@ -232,36 +238,30 @@
 <script>
 const library =[
     { q: "Why does my dog...", a: ["eat grass", "lick me", "stare at me", "sigh"], d:["do taxes", "speak french", "drive", "zoom", "invest in crypto", "judge my outfits"] },
-    { q: "Is it illegal to...", a:["drive barefoot", "kill a praying mantis", "own a monkey", "collect rainwater"], d:["eat soup with a fork", "sleep in a bank", "blink rapidly", "eat a swan", "marry a ghost", "walk backwards"] },
-    { q: "I accidentally ate...", a: ["mold", "raw chicken", "plastic", "a bug"], d:["a car", "my homework", "a ghost", "gravity", "a magnet", "dry ice"] },
-    { q: "How to hide a...", a:["hickey", "dead body", "fart", "pregnancy"], d:["stolen jet", "mountain", "planet", "secret", "dinosaur", "giraffe"] },
+    { q: "Which state searched for 'sugar daddies' the most?", a:["Nevada", "Florida", "Georgia", "New York"], d:["Idaho", "Wyoming", "Montana", "South Dakota", "North Dakota", "Nebraska"] },
+    { q: "I accidentally ate...", a:["mold", "raw chicken", "plastic", "a bug"], d:["a car", "my homework", "a ghost", "gravity", "a magnet", "dry ice"] },
+    { q: "Which state has the worst drivers?", a:["Massachusetts", "New Jersey", "Florida", "California"], d:["Ohio", "Texas", "Nevada", "Wyoming", "Alaska", "Hawaii"] },
     { q: "My husband thinks he is...", a:["always right", "a woman", "god", "funny"], d:["a potato", "batman", "invisible", "a cat", "a sovereign citizen", "the president"] },
-    { q: "I think my child is...", a:["a psychopath", "gifted", "autistic", "a genius"], d:["a vampire", "a spy", "a robot", "an alien", "a time traveler", "a millionaire"] },
+    { q: "Which state has the most serial killers?", a:["Alaska", "California", "Texas", "Florida"], d:["Wyoming", "South Dakota", "Vermont", "Maine", "North Dakota", "Nebraska"] },
     { q: "Can you die from...", a:["a broken heart", "drinking too much water", "lack of sleep", "holding your breath"], d:["doing math", "bad jokes", "singing off key", "blinking", "eating too much cheese", "extreme boredom"] },
-    { q: "Why is the sky...", a:["blue", "purple", "falling", "orange today"], d:["loud", "crunchy", "angry", "fake", "screaming", "green"] },
+    { q: "Which state searches for 'is it legal to own a raccoon'?", a:["Texas", "Florida", "Tennessee", "Ohio"], d:["Alaska", "Maine", "Hawaii", "Delaware", "Rhode Island", "Idaho"] },
     { q: "Do ghosts...", a:["exist", "sleep", "eat", "feel cold"], d:["pay taxes", "use wifi", "vote", "shop", "get sunburned", "have passports"] },
-    { q: "Is my cat trying to...", a:["kill me", "tell me something", "eat me", "protect me"], d:["hack my router", "build a bomb", "fly", "sue me", "start a podcast", "steal my identity"] },
-    { q: "Why does it hurt when I...", a: ["pee", "breathe", "swallow", "poop"], d:["think", "wink", "smile", "exist", "look at my bank account", "do math"] },
-    { q: "Where can I buy a...", a:["monkey", "capybara", "sloth", "penguin"], d:["dragon", "soul", "cloud", "time machine", "dinosaur", "goblin"] },
+    { q: "Which state searches for 'UFO sightings' the most?", a:["Idaho", "Montana", "New Mexico", "Wyoming"], d:["New Jersey", "Delaware", "Rhode Island", "Connecticut", "Maryland", "Massachusetts"] },
+    { q: "Why does it hurt when I...", a:["pee", "breathe", "swallow", "poop"], d:["think", "wink", "smile", "exist", "look at my bank account", "do math"] },
+    { q: "Which state has the most fast food restaurants?", a:["Alabama", "Nebraska", "West Virginia", "Oklahoma"], d:["Vermont", "Maine", "Alaska", "Hawaii", "Montana", "Wyoming"] },
     { q: "Why is my poop...", a:["green", "black", "floating", "spicy"], d:["glowing", "invisible", "square", "screaming", "musical", "carbonated"] },
-    { q: "Can a human...", a:["mate with an animal", "outrun a bear", "survive without water", "breathe liquid"], d:["lay an egg", "photosynthesize", "turn into a wolf", "fly", "unhinge their jaw", "regrow a limb"] },
+    { q: "Which state drinks the most beer?", a:["Wisconsin", "North Dakota", "Montana", "South Dakota"], d:["Utah", "New York", "California", "Hawaii", "New Jersey", "Connecticut"] },
     { q: "Why did they cancel...", a:["firefly", "manifest", "the owl house", "mindhunter"], d:["gravity", "the sun", "tuesday", "breathing", "the alphabet", "sleep"] },
-    { q: "Which state has the worst...", a:["drivers", "weather", "roads", "schools"], d:["breath", "haircuts", "ghosts", "gravity", "aliens", "vibes"] },
-    { q: "Which state has the most...", a:["cows", "billionaires", "serial killers", "lakes"], d:["dragons", "vampires", "invisible people", "sadness", "wizards", "time machines"] },
-    { q: "Which state is the most...", a:["boring", "dangerous", "expensive", "racist"], d:["haunted", "radioactive", "sticky", "loud", "fake", "stretchy"] },
-    { q: "Which state is shaped like a...", a:["mitten", "boot", "gun", "pan"], d:["potato", "face", "dinosaur", "cloud", "pizza", "shoe"] },
-    { q: "Which state is known for...", a:["cheese", "potatoes", "weird news", "lobsters"], d:["alien abductions", "wizards", "bad vibes", "lasers", "time travel", "magic"] },
-    { q: "Which state has no...", a:["taxes", "speed limit", "trees", "laws"], d:["gravity", "oxygen", "birds", "sun", "water", "colors"] },
-    { q: "Why is Florida so...", a:["crazy", "hot", "weird", "humid"], d:["loud", "sticky", "haunted", "fast", "glowing", "angry"] },
-    { q: "Why is Texas so...", a:["big", "hot", "conservative", "flat"], d:["loud", "crunchy", "aggressive", "shiny", "spicy", "heavy"] },
-    { q: "Why is California so...", a:["expensive", "liberal", "populated", "dry"], d:["squishy", "stretchy", "fake", "glowing", "hollow", "loud"] },
-    { q: "Is Ohio...", a:["real", "a good place to live", "dangerous", "in the midwest"], d:["haunted", "a simulation", "taking over", "a planet", "a myth", "contagious"] },
-    { q: "Does Wyoming...", a:["exist", "have internet", "have people", "have an airport"], d:["have gravity", "float", "have dragons", "glow", "have laws", "move around"] },
-    { q: "Why do people move to...", a:["texas", "florida", "colorado", "arizona"], d:["the moon", "the ocean", "ohio", "my house", "the void", "mars"] },
-    { q: "Which state drinks the most...", a:["beer", "coffee", "milk", "soda"], d:["motor oil", "lava", "tears", "pickle juice", "swamp water", "bleach"] },
-    { q: "Which state is best for...", a:["retirees", "taxes", "families", "business"], d:["fighting bears", "hiding", "ghosts", "wizards", "time travel", "aliens"] },
-    { q: "Which state loves...", a:["cats", "dogs", "guns", "football"], d:["crying", "staring", "taxes", "aliens", "screaming", "dirt"] },
-    { q: "Is New York...", a:["safe", "expensive", "sinking", "dirty"], d:["in canada", "a country", "made of cheese", "hollow", "floating", "loud"] }
+    { q: "Which state searches for 'how to make meth'?", a:["Missouri", "Indiana", "Arkansas", "Oklahoma"], d:["Hawaii", "Alaska", "Vermont", "Maine", "Rhode Island", "Delaware"] },
+    { q: "Which state has the highest divorce rate?", a:["Nevada", "Oklahoma", "Wyoming", "Arkansas"], d:["New York", "New Jersey", "Massachusetts", "Hawaii", "California", "Utah"] },
+    { q: "Which US territory has the most beaches?", a:["Puerto Rico", "US Virgin Islands", "Guam", "American Samoa"], d:["Northern Mariana Islands", "Wake Island", "Midway Atoll", "Baker Island", "Howland Island", "Kingman Reef"] },
+    { q: "Which state searches for 'how to fight a bear'?", a:["Alaska", "Montana", "Wyoming", "Idaho"], d:["Florida", "Texas", "New York", "California", "Nevada", "Arizona"] },
+    { q: "Which state has the most cows per person?", a:["South Dakota", "Nebraska", "Montana", "Wyoming"], d:["New York", "California", "Florida", "Texas", "New Jersey", "Massachusetts"] },
+    { q: "Which state believes the earth is flat the most?", a:["Colorado", "Texas", "Florida", "Georgia"], d:["Vermont", "Maine", "Alaska", "Hawaii", "Washington", "Oregon"] },
+    { q: "Is it illegal to...", a:["drive barefoot", "kill a praying mantis", "own a monkey", "collect rainwater"], d:["eat soup with a fork", "sleep in a bank", "blink rapidly", "eat a swan", "marry a ghost", "walk backwards"] },
+    { q: "Which state searches for 'how to fake a drug test'?", a:["Louisiana", "Mississippi", "Alabama", "Kentucky"], d:["Utah", "Colorado", "Washington", "Oregon", "Vermont", "Massachusetts"] },
+    { q: "Which state has the most UFO sightings per capita?", a:["Washington", "Montana", "Alaska", "Vermont"], d:["New York", "Florida", "Texas", "California", "Georgia", "Illinois"] },
+    { q: "How to hide a...", a:["hickey", "dead body", "fart", "pregnancy"], d:["stolen jet", "mountain", "planet", "secret", "dinosaur", "giraffe"] }
 ];
 
 let teams =[];
@@ -291,7 +291,7 @@ function startGame(numTeams) {
 
 function setupRound() {
     let qData = library[currentQIdx];
-    document.getElementById('question-text').textContent = qData.q + "...";
+    document.getElementById('question-text').textContent = qData.q + (qData.q.endsWith('?') ? "" : "...");
     document.getElementById('strikes-display').textContent = '';
     document.getElementById('next-round-btn').style.display = 'none';
     strikes = 0;
@@ -427,7 +427,7 @@ function showGameOver() {
         if (isCoop) {
             row.innerHTML = `<span>Final Score:</span><span>${t.score} PTS</span>`;
         } else {
-            row.innerHTML = `<span>Team ${t.id} ${i === 0 ? '👑' : ''}</span><span>${t.score}</span>`;
+            row.innerHTML = `<span>Team ${t.id} ${i === 0 ? '🏆' : ''}</span><span>${t.score}</span>`;
         }
         standings.appendChild(row);
     });
