@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Glass Feud</title>
+<title>Neon Feud</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<div id="setup-screen" class="screen active glass-panel">
+<div id="setup-screen" class="screen active glass">
     <div class="logo">
-        <span class="g-blue">G</span><span class="g-red">l</span><span class="g-yellow">a</span><span class="g-blue">s</span><span class="g-green">s</span><span class="g-red">F</span><span class="g-blue">e</span><span class="g-red">u</span><span class="g-yellow">d</span>
+        <span class="text-glow">Neon</span>Feud
     </div>
     <h2>Select Game Mode</h2>
     <div class="team-setup">
@@ -22,28 +22,28 @@
 </div>
 
 <div id="game-screen" class="screen">
-    <div class="header-container glass-panel">
+    <div class="top-bar glass">
         <div class="logo small">
-            <span class="g-blue">G</span><span class="g-red">l</span><span class="g-yellow">a</span><span class="g-blue">s</span><span class="g-green">s</span><span class="g-red">F</span><span class="g-blue">e</span><span class="g-red">u</span><span class="g-yellow">d</span>
+            <span class="text-glow">Neon</span>Feud
         </div>
         <div id="scoreboard"></div>
         <div id="strikes-container"></div>
     </div>
 
-    <div class="search-box glass-panel">
+    <div class="query-box glass">
         <span id="query-prefix"></span>
     </div>
 
-    <div class="board-container glass-panel">
+    <div class="board-container glass">
         <ul id="answers-board"></ul>
     </div>
 
-    <div class="choices-container glass-panel">
+    <div class="choices-container glass">
         <div id="choices-grid"></div>
     </div>
 
     <div class="controls">
-        <button id="next-round-btn" class="glass-button" style="display: none;">Next Round</button>
+        <button id="next-round-btn" style="display: none;">Next Round</button>
     </div>
 </div>
 
