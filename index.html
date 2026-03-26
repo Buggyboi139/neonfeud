@@ -3,50 +3,48 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RetroSearch Feud</title>
+<title>Glass Feud</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<div id="setup-screen" class="screen active">
+<div id="setup-screen" class="screen active glass-panel">
     <div class="logo">
-        <span class="blue">R</span><span class="red">e</span><span class="yellow">t</span><span class="blue">r</span><span class="green">o</span><span class="red">F</span><span class="blue">e</span><span class="red">u</span><span class="yellow">d</span>
+        <span class="g-blue">G</span><span class="g-red">l</span><span class="g-yellow">a</span><span class="g-blue">s</span><span class="g-green">s</span><span class="g-red">F</span><span class="g-blue">e</span><span class="g-red">u</span><span class="g-yellow">d</span>
     </div>
-    <h2>How many teams?</h2>
+    <h2>Select Game Mode</h2>
     <div class="team-setup">
-        <button onclick="startGame(2)">2 Players / Teams</button>
-        <button onclick="startGame(3)">3 Players / Teams</button>
-        <button onclick="startGame(4)">4 Players / Teams</button>
+        <button onclick="startGame(1)">1 Player (Co-op)</button>
+        <button onclick="startGame(2)">2 Teams</button>
+        <button onclick="startGame(3)">3 Teams</button>
+        <button onclick="startGame(4)">4 Teams</button>
     </div>
 </div>
 
 <div id="game-screen" class="screen">
-    <div class="logo small">
-        <span class="blue">R</span><span class="red">e</span><span class="yellow">t</span><span class="blue">r</span><span class="green">o</span><span class="red">F</span><span class="blue">e</span><span class="red">u</span><span class="yellow">d</span>
+    <div class="header-container glass-panel">
+        <div class="logo small">
+            <span class="g-blue">G</span><span class="g-red">l</span><span class="g-yellow">a</span><span class="g-blue">s</span><span class="g-green">s</span><span class="g-red">F</span><span class="g-blue">e</span><span class="g-red">u</span><span class="g-yellow">d</span>
+        </div>
+        <div id="scoreboard"></div>
+        <div id="strikes-container"></div>
     </div>
 
-    <div class="search-container">
-        <div class="search-box">
-            <span id="query-prefix"></span>
-            <input type="text" id="guess-input" autocomplete="off" autocorrect="off">
-        </div>
-        <div class="search-buttons">
-            <button id="guess-btn">Retro Search</button>
-            <button id="pass-btn">I'm Feeling Lucky (Pass)</button>
-        </div>
+    <div class="search-box glass-panel">
+        <span id="query-prefix"></span>
     </div>
 
-    <div id="strikes-container"></div>
-
-    <div class="board-container">
+    <div class="board-container glass-panel">
         <ul id="answers-board"></ul>
     </div>
 
-    <div class="controls">
-        <button id="next-round-btn">Next Round</button>
+    <div class="choices-container glass-panel">
+        <div id="choices-grid"></div>
     </div>
 
-    <div id="scoreboard"></div>
+    <div class="controls">
+        <button id="next-round-btn" class="glass-button" style="display: none;">Next Round</button>
+    </div>
 </div>
 
 <script src="script.js"></script>
