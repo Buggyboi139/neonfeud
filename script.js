@@ -32,7 +32,7 @@ function vibrate(pattern) {
 }
 
 let bank = parseInt(localStorage.getItem('rf_coins')) || 0;
-let unlockedPacks = JSON.parse(localStorage.getItem('rf_unlocks')) ||['wild_web', 'worldbuilder_history', 'measure_google_once'];
+let unlockedPacks = JSON.parse(localStorage.getItem('rf_unlocks')) ||['wild_web', 'worldbuilder_history', 'hl_food_fight'];
 let customPacks = JSON.parse(localStorage.getItem('rf_custom_packs')) || [];
 
 let allPacks =[];
@@ -54,6 +54,7 @@ let totalActualReveals = 0;
 let timerInterval;
 let timeLeft = 60;
 let wagerAmount = 0;
+let hlIndex = 0;
 
 window.onload = async () => {
     updateBankUI();
@@ -114,13 +115,15 @@ function goToStore() {
         const isOwned = unlockedPacks.includes(pack.id) || pack.unlockedByDefault;
         if(pack.unlockedByDefault && !unlockedPacks.includes(pack.id)) unlockedPacks.push(pack.id);
 
-        let icon = pack.type === 'letter_pool' ? '🅰️' : '🔍';
+        let icon = '🔍';
+        if(pack.type === 'letter_pool') icon = '🅰️';
+        if(pack.type === 'higher_lower') icon = '📈';
 
         const card = document.createElement('div');
         card.className = 'pack-card';
         card.innerHTML = `
             <div>
-                <h3 style="color:${pack.color || 'var(--purple-neon)'}">${icon} ${pack.name}</h3>
+                <h3 style="color:${pack.color || 'var(--theme-color)'}">${icon} ${pack.name}</h3>
                 <p>${pack.description}</p>
                 <p style="color:#aaa">${pack.questions.length} Questions</p>
             </div>
@@ -223,7 +226,9 @@ function goToPackSelect() {
     allPacks.forEach(pack => {
         if(unlockedPacks.includes(pack.id) || pack.unlockedByDefault) {
             const btn = document.createElement('button');
-            let icon = pack.type === 'letter_pool' ? '🅰️' : '🔍';
+            let icon = '🔍';
+            if(pack.type === 'letter_pool') icon = '🅰️';
+            if(pack.type === 'higher_lower') icon = '📈';
             btn.textContent = `${icon} ${pack.name}`;
             if(pack.color) btn.style.borderTopColor = pack.color;
             btn.onclick = () => {
@@ -254,7 +259,7 @@ function startGame(numTeams) {
     teams = Array.from({length: numTeams}, (_, i) => ({ id: i+1, score: 0 }));
     
     let maxQ = Math.min(5, selectedPack.questions.length);
-    activeQuestions = [...selectedPack.questions].sort(() => 0.5 - Math.random()).slice(0, maxQ);
+    activeQuestions =[...selectedPack.questions].sort(() => 0.5 - Math.random()).slice(0, maxQ);
     totalPossibleReveals = 0;
     
     if (selectedPack.type === 'letter_pool') {
@@ -347,7 +352,7 @@ function getFeudDistractors(currentQuestion, pack) {
     pack.questions.forEach(q => {
         if(q.q !== currentQuestion.q) allValidAnswers.push(...q.a);
     });
-    if(allValidAnswers.length === 0) allValidAnswers = ["Apple", "Banana", "Car", "Dog", "House"];
+    if(allValidAnswers.length === 0) allValidAnswers =["Apple", "Banana", "Car", "Dog", "House"];
     let uniqueDistractors = [...new Set(allValidAnswers)].sort(() => 0.5 - Math.random());
     return uniqueDistractors.slice(0, 4);
 }
@@ -367,9 +372,23 @@ function setupRound() {
     const choices = document.getElementById('choices-container');
     choices.innerHTML = '';
 
-    if (selectedPack.type === 'letter_pool') {
+    if (selectedPack.type === 'higher_lower') {
         document.getElementById('board-container').style.display = 'none';
+        document.getElementById('letter-board-container').style.display = 'none';
+        document.getElementById('choices-container').style.display = 'none';
+        document.getElementById('question-text').style.display = 'block';
+        document.getElementById('hl-board-container').style.display = 'flex';
+        document.getElementById('hl-choices-container').style.display = 'grid';
+        document.getElementById('lifeline-bar').style.display = 'none';
+        hlIndex = 0;
+        renderHLPair();
+    } else if (selectedPack.type === 'letter_pool') {
+        document.getElementById('hl-board-container').style.display = 'none';
+        document.getElementById('hl-choices-container').style.display = 'none';
+        document.getElementById('board-container').style.display = 'none';
+        document.getElementById('question-text').style.display = 'block';
         document.getElementById('letter-board-container').style.display = 'flex';
+        document.getElementById('choices-container').style.display = 'grid';
         
         let targetWord = qData.a.toUpperCase();
         let uniqueLetters = [...new Set(targetWord.split(''))].filter(c => c.trim() !== '');
@@ -391,7 +410,7 @@ function setupRound() {
         });
         
         let decoys = getDecoyLetters(uniqueLetters, 16);
-        let combinedChoices = [...uniqueLetters, ...decoys].sort(() => 0.5 - Math.random());
+        let combinedChoices =[...uniqueLetters, ...decoys].sort(() => 0.5 - Math.random());
         
         combinedChoices.forEach(letter => {
             let btn = document.createElement('button');
@@ -402,10 +421,14 @@ function setupRound() {
         });
         
     } else {
-        document.getElementById('board-container').style.display = 'grid';
+        document.getElementById('hl-board-container').style.display = 'none';
+        document.getElementById('hl-choices-container').style.display = 'none';
         document.getElementById('letter-board-container').style.display = 'none';
+        document.getElementById('question-text').style.display = 'block';
+        document.getElementById('board-container').style.display = 'grid';
+        document.getElementById('choices-container').style.display = 'grid';
         
-        const ptsArray =[100, 75, 50, 25];
+        const ptsArray = [100, 75, 50, 25];
         currentAnswers = qData.a.map((text, index) => ({ text: text, points: ptsArray[index] || 10, revealed: false }));
 
         const board = document.getElementById('board-container');
@@ -434,10 +457,98 @@ function setupRound() {
     startTimer();
 }
 
+function renderHLPair() {
+    let arr = activeQuestions[currentQIdx].a;
+    let base = arr[hlIndex];
+    let target = arr[hlIndex+1];
+    document.getElementById('hl-base-term').textContent = `"${base.text}"`;
+    document.getElementById('hl-base-vol').textContent = base.vol.toLocaleString();
+    document.getElementById('hl-target-term').textContent = `"${target.text}"`;
+    document.getElementById('hl-target-vol').textContent = "???";
+    document.getElementById('hl-target-vol').style.color = "var(--yellow)";
+    document.querySelectorAll('#hl-choices-container button').forEach(b => b.disabled = false);
+}
+
+function processHLChoice(guess) {
+    if (strikes >= 3 && !isStealMode) return;
+    document.querySelectorAll('#hl-choices-container button').forEach(b => b.disabled = true);
+    
+    let arr = activeQuestions[currentQIdx].a;
+    let base = arr[hlIndex];
+    let target = arr[hlIndex+1];
+    let isHigher = target.vol >= base.vol;
+    let isCorrect = (guess === 'higher' && isHigher) || (guess === 'lower' && !isHigher);
+    
+    let volEl = document.getElementById('hl-target-vol');
+    volEl.textContent = target.vol.toLocaleString();
+    
+    if (isCorrect) {
+        playSfx('ding'); vibrate(100);
+        volEl.style.color = "var(--green)";
+        revealedCount++; totalActualReveals++;
+        
+        if (isStealMode) {
+            teams[currentTeamIdx].score += (roundBank + 100);
+            roundBank = 0;
+            setTimeout(finishRound, 1500);
+        } else {
+            roundBank += 100; renderScores();
+            if (hlIndex === 3) {
+                teams[currentTeamIdx].score += roundBank;
+                if(currentQIdx === 4 && wagerAmount > 0) teams[currentTeamIdx].score += wagerAmount;
+                roundBank = 0; setTimeout(finishRound, 1500);
+            } else {
+                setTimeout(() => { hlIndex++; renderHLPair(); }, 1500);
+            }
+        }
+    } else {
+        playSfx('buzzer'); vibrate([50, 50, 50]);
+        volEl.style.color = "var(--red)";
+        
+        if (isStealMode) {
+            let originalTeam = (currentTeamIdx - 1 + teams.length) % teams.length;
+            teams[originalTeam].score += roundBank; roundBank = 0; setTimeout(finishRound, 1500);
+        } else {
+            strikes++;
+            document.getElementById('strikes-display').textContent = 'X '.repeat(strikes).trim();
+            if (strikes >= 3) {
+                if(currentQIdx === 4 && wagerAmount > 0 && !isStealMode) {
+                    teams[currentTeamIdx].score -= wagerAmount;
+                    if(teams[currentTeamIdx].score < 0) teams[currentTeamIdx].score = 0;
+                }
+                if (isCoop || hlIndex === 3) {
+                    roundBank = 0; setTimeout(finishRound, 1500);
+                } else {
+                    clearInterval(timerInterval);
+                    setTimeout(() => {
+                        isStealMode = true; currentTeamIdx = (currentTeamIdx + 1) % teams.length;
+                        document.getElementById('steal-banner').style.display = 'block';
+                        document.getElementById('strikes-display').textContent = ''; 
+                        startTimer(); renderScores(); hlIndex++; renderHLPair();
+                    }, 1500);
+                }
+            } else {
+                if (hlIndex === 3) {
+                    teams[currentTeamIdx].score += roundBank;
+                    if(currentQIdx === 4 && wagerAmount > 0) teams[currentTeamIdx].score += wagerAmount;
+                    roundBank = 0; setTimeout(finishRound, 1500);
+                } else {
+                    if (!isCoop) currentTeamIdx = (currentTeamIdx + 1) % teams.length;
+                    renderScores();
+                    setTimeout(() => { hlIndex++; renderHLPair(); }, 1500);
+                }
+            }
+        }
+    }
+}
+
 function updateLifelineUI() {
-    document.getElementById('ll-5050').disabled = bank < 50;
-    document.getElementById('ll-hint').disabled = bank < 100;
-    document.getElementById('ll-mulligan').disabled = bank < 150 || strikes === 0;
+    let btn5050 = document.getElementById('ll-5050');
+    let btnHint = document.getElementById('ll-hint');
+    let btnMull = document.getElementById('ll-mulligan');
+    if(btn5050) btn5050.disabled = bank < 50;
+    if(btnHint) btnHint.disabled = bank < 100;
+    if(btnMull) btnMull.disabled = bank < 150 || strikes === 0;
 }
 
 function use5050() {
@@ -473,22 +584,6 @@ function useMulligan() {
     strikes--;
     document.getElementById('strikes-display').textContent = 'X '.repeat(strikes).trim();
     updateLifelineUI();
-}
-
-function animateValue(obj, start, end, duration) {
-    let startTimestamp = null;
-    const step = (timestamp) => {
-        if (!startTimestamp) startTimestamp = timestamp;
-        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        let val = Math.floor(progress * (end - start) + start);
-        if (obj.textContent.includes('TEAM')) {
-            obj.textContent = obj.textContent.replace(/: \d+/, ': ' + val);
-        } else {
-            obj.textContent = `SCORE: ${val}`;
-        }
-        if (progress < 1) window.requestAnimationFrame(step);
-    };
-    window.requestAnimationFrame(step);
 }
 
 function renderScores() {
@@ -620,8 +715,7 @@ function triggerStrike() {
                 isStealMode = true; currentTeamIdx = (currentTeamIdx + 1) % teams.length;
                 document.getElementById('steal-banner').style.display = 'block';
                 document.getElementById('strikes-display').textContent = ''; 
-                startTimer();
-                renderScores();
+                startTimer(); renderScores();
             }, 1000);
         }
     }
@@ -642,7 +736,7 @@ function finishRound() {
         document.querySelectorAll('.letter-blank.hidden-letter').forEach(blank => {
             blank.classList.remove('hidden-letter'); blank.classList.add('missed-letter');
         });
-    } else {
+    } else if (selectedPack.type === 'feud') {
         currentAnswers.forEach((ans, idx) => {
             if (!ans.revealed) {
                 let row = document.getElementById(`row-${idx}`);
