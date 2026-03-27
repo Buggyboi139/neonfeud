@@ -26,10 +26,11 @@
     <div class="modal-content">
         <h3>How To Play</h3>
         <p><strong>Neon Feud</strong> is a party game based on the bizarre, unhinged search queries of the internet.</p>
-        <p><strong>Two Game Modes:</strong></p>
+        <p><strong>Game Modes:</strong></p>
         <ul>
             <li>🔍 <strong>Feud Mode:</strong> Guess the top 4 autocomplete results. Watch out for decoys!</li>
             <li>🅰️ <strong>Letter Pool:</strong> A Jeopardy/Hangman hybrid. Guess the single blank word.</li>
+            <li>📈 <strong>Higher or Lower:</strong> Guess which search term gets more traffic!</li>
         </ul>
         <p><strong>The Rules:</strong></p>
         <ul>
@@ -118,7 +119,22 @@
         <div class="query-box" id="question-text"></div>
         <div class="board-grid" id="board-container"></div>
         <div id="letter-board-container"></div>
+        <div id="hl-board-container" style="display: none; flex-direction: column; gap: 3vmin; width: 100%; margin-bottom: 2vmin;">
+            <div class="hl-box base-box">
+                <div class="hl-term" id="hl-base-term"></div>
+                <div class="hl-vol" id="hl-base-vol"></div>
+            </div>
+            <div class="hl-vs">VS</div>
+            <div class="hl-box target-box">
+                <div class="hl-term" id="hl-target-term"></div>
+                <div class="hl-vol" id="hl-target-vol">???</div>
+            </div>
+        </div>
         <div class="choices-area" id="choices-container"></div>
+        <div class="choices-area" id="hl-choices-container" style="display: none; grid-template-columns: 1fr 1fr;">
+            <button class="choice-btn hl-btn" style="background: rgba(0,255,136,0.2); border-color: var(--green); color: var(--green);" onclick="processHLChoice('higher')">HIGHER ⬆️</button>
+            <button class="choice-btn hl-btn" style="background: rgba(255,42,95,0.2); border-color: var(--red); color: var(--red);" onclick="processHLChoice('lower')">LOWER ⬇️</button>
+        </div>
         <div class="lifeline-bar" id="lifeline-bar">
             <button class="lifeline-btn" id="ll-5050" onclick="use5050()">50/50 (50💰)</button>
             <button class="lifeline-btn" id="ll-hint" onclick="useFirstLetter()">Hint (100💰)</button>
