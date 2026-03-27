@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Neon Feud - TV Edition</title>
+
+<!-- PWA & Web App Meta Tags -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#030303">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Neon Feud">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="portrait-lock">
+    <span>🔄</span>
+    Please Rotate<br>Your Device
+</div>
+
+<div class="moving-light"></div>
+
+<!-- How To Play Modal -->
+<div class="modal-overlay" id="about-modal">
+    <div class="modal-content">
+        <h3>How To Play</h3>
+        <p><strong>Neon Feud</strong> is a party game based on the bizarre, unhinged, and painfully real search queries of the internet. It pulls real autocomplete data and tests if you can guess what the rest of the world is typing into their search bars!</p>
+        
+        <p><strong>Two Game Modes:</strong></p>
+        <ul>
+            <li>🔍 <strong>Feud Mode:</strong> Guess the top 4 autocomplete results for a given phrase. Watch out for the decoys!</li>
+            <li>🅰️ <strong>Letter Pool:</strong> A Jeopardy/Hangman hybrid. Guess the single blank word using the dynamic letter tiles provided.</li>
+        </ul>
+
+        <p><strong>The Rules:</strong></p>
+        <ul>
+            <li>Your team keeps control of the board as long as you guess correctly.</li>
+            <li>Guess wrong (or hit a decoy), and you get a <strong>Strike</strong>.</li>
+            <li><strong>3 Strikes</strong> means you lose control of the board!</li>
+            <li>🚨 <strong>The Steal:</strong> When a team strikes out, the next team gets <em>one single chance</em> to guess a remaining answer. If they get it right, they steal ALL the points banked that round!</li>
+        </ul>
+        <p>Earn Coins by completing matches to unlock new premium Question Packs in the Store!</p>
+        <button class="close-modal-btn" onclick="closeAbout()">Got It!</button>
+    </div>
+</div>
+
+<div id="app-container">
+    
+    <!-- MAIN MENU -->
+    <div id="menu-screen" class="screen active">
+        <div class="top-bar">
+            <div></div>
+            <div class="currency-bank" id="menu-bank">💰 0 Coins</div>
+        </div>
+        <div class="logo" style="margin-top: 10vh;"><span>Neon</span>Feud</div>
+        <h2>Search Engine Showdown</h2>
+        <div class="btn-grid">
+            <button onclick="goToPackSelect()">Play Game</button>
+            <button onclick="goToStore()">Store / Packs</button>
+            <button class="back-btn" style="width:100%; margin-top: 2vmin; padding: 2vmin; border-radius: 2vmin; font-size: 2.5vmin; border-color: rgba(176,102,255,0.5);" onclick="openAbout()">ℹ️ How To Play</button>
+        </div>
+    </div>
+
+    <!-- STORE -->
+    <div id="store-screen" class="screen">
+        <div class="top-bar">
+            <button class="back-btn" onclick="showScreen('menu-screen')">⬅ Back</button>
+            <div class="currency-bank" id="store-bank">💰 0 Coins</div>
+        </div>
+        <div class="logo"><span>Pack</span> Store</div>
+        <div class="store-grid" id="store-container"></div>
+    </div>
+
+    <!-- PACK & TEAM SELECT -->
+    <div id="setup-screen" class="screen">
+        <div class="top-bar">
+            <button class="back-btn" onclick="showScreen('menu-screen')">⬅ Back</button>
+        </div>
+        <div class="logo"><span>Setup</span></div>
+        
+        <!-- Step 1: Pack Selection -->
+        <h2 id="step-1-title">1. Select Pack</h2>
+        <div class="btn-grid" id="pack-select-container"></div>
+        
+        <!-- Step 2: Team Selection -->
+        <div id="team-selection-area" style="display: none; text-align: center; flex-grow: 1;">
+            <h3 id="selected-pack-display" style="color: var(--purple-neon); margin-bottom: 2vmin; font-size: 4vmin; text-transform: uppercase;"></h3>
+            <button class="back-btn" onclick="resetPackSelection()" style="margin-bottom: 5vmin;">Change Pack</button>
+            
+            <h2>2. Teams Mode</h2>
+            <div class="btn-grid" id="team-select-container">
+                <button onclick="startGame(1)">1 Player (Co-op)</button>
+                <button onclick="startGame(2)">2 Teams</button>
+                <button onclick="startGame(3)">3 Teams</button>
+                <button onclick="startGame(4)">4 Teams</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GAMEPLAY -->
+    <div id="game-screen" class="screen">
+        <div class="top-bar">
+            <button class="back-btn" onclick="quitGame()">⬅ Quit</button>
+            <div id="scoreboard"></div>
+            <div id="strikes-display"></div>
+        </div>
+
+        <div id="steal-banner">🚨 STEAL OPPORTUNITY! ONE MISTAKE AND YOU'RE OUT! 🚨</div>
+
+        <div class="query-box" id="question-text"></div>
+
+        <div class="board-grid" id="board-container"></div>
+        <div id="letter-board-container"></div>
+
+        <div class="choices-area" id="choices-container"></div>
+
+        <button class="give-up-btn" id="give-up-btn" onclick="giveUpRound()">Reveal Board (Give Up)</button>
+        <button class="give-up-btn" id="next-round-btn" style="display:none; background: var(--purple-grad); color: #fff; border:none;" onclick="nextRound()">Next Round ➔</button>
+    </div>
+
+    <!-- END SCREEN -->
+    <div id="end-screen" class="screen">
+        <div class="logo"><span>Game</span>Over</div>
+        <h2 id="end-earned">You earned XXX Coins!</h2>
+        <div class="final-standings" id="final-standings"></div>
+        <div class="btn-grid">
+            <button onclick="location.reload()">Main Menu</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
