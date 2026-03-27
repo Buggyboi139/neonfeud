@@ -2,8 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Neon Feud - TV Edition</title>
+
+<!-- PWA & Web App Meta Tags -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#030303">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Neon Feud">
+<link rel="apple-touch-icon" href="icon-192.png">
+
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800;900&display=swap" rel="stylesheet">
 <style>
     :root {
@@ -19,12 +28,14 @@
         --inner-bg: rgba(0, 0, 0, 0.5);
     }
 
-    * { box-sizing: border-box; font-family: 'Outfit', sans-serif; margin: 0; padding: 0; user-select: none; }
+    /* Prevent text selection and pinch-to-zoom for app-like feel */
+    * { box-sizing: border-box; font-family: 'Outfit', sans-serif; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
 
     body {
         background-color: var(--bg-solid);
         color: #fff;
         height: 100vh;
+        width: 100vw;
         overflow: hidden;
         display: flex;
         align-items: center;
@@ -64,7 +75,7 @@
         -webkit-backdrop-filter: blur(25px); border: 1px solid var(--master-glass-border);
         border-radius: 3vmin; box-shadow: 0 4vmin 6vmin rgba(0, 0, 0, 0.8);
         padding: 3vmin; flex-direction: column;
-        overflow-y: auto; /* ALLOWS SCROLLING SO BUTTONS AREN'T LOST */
+        overflow-y: auto;
     }
     .screen.active { display: flex; animation: fadeIn 0.4s ease-out; }
 
@@ -88,7 +99,6 @@
     button:active { transform: translateY(0); }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* Quit Button Styling */
     .back-btn { 
         background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); 
         padding: 1.5vmin 2vmin; border-radius: 1vmin; font-size: 2.2vmin; color: #fff; 
@@ -112,7 +122,6 @@
     
     #steal-banner { display: none; background: var(--yellow); color: #000; text-align: center; font-weight: 900; font-size: 3vmin; padding: 1.5vmin; border-radius: 1vmin; margin-bottom: 2vmin; text-transform: uppercase; animation: shake 0.5s; }
 
-    /* Feud Board */
     .board-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2vmin; margin-bottom: 2vmin; }
     .board-row { display: flex; align-items: center; background: rgba(0, 0, 0, 0.6); border: 1px solid var(--master-glass-border); border-radius: 2vmin; padding: 2.5vmin; font-size: 3.5vmin; font-weight: 500; text-transform: uppercase; }
     .board-row.revealed { background: rgba(0, 255, 136, 0.15); border-color: var(--green); }
@@ -122,14 +131,12 @@
     .ans-pts { color: var(--green); font-weight: 900; font-size: 4vmin; }
     .hidden-content .ans-text, .hidden-content .ans-pts { opacity: 0; }
 
-    /* Letter Pool Board - Compacted Sizes */
     #letter-board-container { display: none; justify-content: center; gap: 1.5vmin; margin-bottom: 3vmin; flex-wrap: wrap; }
     .letter-blank { width: 5vmin; height: 6vmin; border-bottom: 0.6vmin solid var(--cyan); display: flex; align-items: center; justify-content: center; font-size: 5vmin; font-weight: 900; color: #fff; text-transform: uppercase; transition: all 0.3s ease; }
     .letter-blank.hidden-letter { color: transparent; }
     .letter-blank.revealed-letter { color: var(--green); text-shadow: 0 0 1.5vmin rgba(0, 255, 136, 0.5); border-color: var(--green); transform: scale(1.1); }
     .letter-blank.missed-letter { color: var(--red); border-color: var(--red); opacity: 0.7; }
 
-    /* Controller Area - Slimmer Padding */
     .choices-area { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5vmin; padding: 2vmin; background: var(--inner-bg); border-radius: 2vmin; flex-grow: 1; align-content: start; }
     .choice-btn { font-size: 3vmin; padding: 2vmin; display: flex; align-items: center; justify-content: center; word-wrap: break-word; line-height: 1.2; }
     .choice-btn.letter-btn { font-size: 4vmin; font-weight: 900; padding: 1.5vmin; }
@@ -209,7 +216,6 @@
     <!-- GAMEPLAY -->
     <div id="game-screen" class="screen">
         <div class="top-bar">
-            <!-- New Quit Button -->
             <button class="back-btn" onclick="quitGame()">⬅ Quit</button>
             <div id="scoreboard"></div>
             <div id="strikes-display"></div>
@@ -241,6 +247,22 @@
 </div>
 
 <script>
+// ==========================================
+// PWA Service Worker Registration
+// ==========================================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').then(registration => {
+      console.log('SW registered!', registration);
+    }).catch(err => {
+      console.log('SW registration failed: ', err);
+    });
+  });
+}
+
+// ==========================================
+// Game Engine
+// ==========================================
 const sfx = {
     click: new Audio('click.mp3'),
     ding: new Audio('ding.mp3'),
@@ -259,7 +281,7 @@ let unlockedPacks = JSON.parse(localStorage.getItem('rf_unlocks')) ||['wild_web'
 
 let allPacks =[];
 let selectedPack = null;
-let activeQuestions = [];
+let activeQuestions =[];
 let teams =[];
 let currentTeamIdx = 0;
 let currentQIdx = 0;
@@ -296,7 +318,6 @@ function showScreen(id) {
     document.getElementById(id).classList.add('active');
 }
 
-// Quit Game handler
 function quitGame() {
     playSfx('click');
     if(confirm("Are you sure you want to quit? You will lose any points banked this round.")) {
@@ -519,7 +540,7 @@ function renderScores() {
 
 // Feud Processing
 function processFeudChoice(btn, choiceText) {
-    if (strikes >= 3 && !isStealMode) return; // Prevent spam-clicking when striking out
+    if (strikes >= 3 && !isStealMode) return; 
     
     let matchIdx = currentAnswers.findIndex(a => a.text === choiceText);
 
@@ -555,7 +576,7 @@ function processFeudChoice(btn, choiceText) {
 
 // Letter Pool Processing
 function processLetterChoice(btn, choiceText, targetRevealCount) {
-    if (strikes >= 3 && !isStealMode) return; // Prevent spam-clicking when striking out
+    if (strikes >= 3 && !isStealMode) return; 
 
     let matchIdx = currentAnswers.findIndex(a => a.text === choiceText);
 
@@ -633,7 +654,6 @@ function finishRound() {
     }
     renderScores();
     
-    // Auto-scroll to the bottom so the Next button is always visible
     document.getElementById('game-screen').scrollTo({ top: document.getElementById('game-screen').scrollHeight, behavior: 'smooth' });
 }
 
