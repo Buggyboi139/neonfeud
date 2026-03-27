@@ -1,1 +1,53 @@
 
+{
+    "id": "wild_web",
+    "name": "The Wild Web",
+    "description": "Standard unhinged search engine autocompletes.",
+    "price": 0,
+    "unlockedByDefault": true,
+    "questions":[
+      { "q": "Why does my dog...", "a":["eat grass", "lick me", "stare at me", "sigh"] },
+      { "q": "I accidentally ate...", "a":["mold", "raw chicken", "plastic", "a bug"] },
+      { "q": "My husband thinks he is...", "a": ["always right", "a woman", "god", "funny"] },
+      { "q": "Can you die from...", "a":["a broken heart", "drinking too much water", "lack of sleep", "holding your breath"] },
+      { "q": "Do ghosts...", "a":["exist", "sleep", "eat", "feel cold"] },
+      { "q": "Why does it hurt when I...", "a": ["pee", "breathe", "swallow", "poop"] },
+      { "q": "Why is my poop...", "a": ["green", "black", "floating", "spicy"] },
+      { "q": "Why did they cancel...", "a":["firefly", "manifest", "the owl house", "mindhunter"] },
+      { "q": "Is it illegal to...", "a":["drive barefoot", "kill a praying mantis", "own a monkey", "collect rainwater"] },
+      { "q": "How to hide a...", "a": ["hickey", "dead body", "fart", "pregnancy"] },
+      { "q": "Why is the government hiding...", "a":["aliens", "the cure for cancer", "giants", "time travel"] },
+      { "q": "Can I legally marry a...", "a": ["cousin", "tree", "dog", "ghost"] },
+      { "q": "What happens if I microwave a...", "a": ["cd", "marshmallow", "lightbulb", "penny"] },
+      { "q": "Is it illegal to name your child...", "a":["Hitler", "God", "Nutella", "King"] },
+      { "q": "Why do British people...", "a": ["say innit", "have bad teeth", "drink so much tea", "talk like that"] },
+      { "q": "How to legally steal...", "a":["a dog", "money", "wifi", "land"] },
+      { "q": "Can a human fight a...", "a":["kangaroo", "chimpanzee", "bear", "wolf"] },
+      { "q": "What happens if I drink...", "a": ["bleach", "hydrogen peroxide", "rubbing alcohol", "blood"] }
+    ]
+  },
+  {
+    "id": "state_secrets",
+    "name": "State Secrets",
+    "description": "The darkest, weirdest queries about US States and Territories.",
+    "price": 500,
+    "unlockedByDefault": false,
+    "questions":[
+      { "q": "Which state has the most felonies?", "a": ["Louisiana", "Mississippi", "Arkansas", "Oklahoma"] },
+      { "q": "Which state searches for 'is bestiality legal'?", "a":["Indiana", "Louisiana", "Kentucky", "Texas"] },
+      { "q": "Which state searched for 'sugar daddies' the most?", "a": ["Nevada", "Florida", "Georgia", "New York"] },
+      { "q": "Which state has the worst drivers?", "a":["Massachusetts", "New Jersey", "Florida", "California"] },
+      { "q": "Which state has the most serial killers per capita?", "a": ["Alaska", "Nevada", "Florida", "California"] },
+      { "q": "Which state searches for 'is it legal to own a raccoon'?", "a":["Texas", "Florida", "Tennessee", "Ohio"] },
+      { "q": "Which state searches for 'UFO sightings' the most?", "a": ["Idaho", "Montana", "New Mexico", "Wyoming"] },
+      { "q": "Which state drinks the most beer?", "a": ["Wisconsin", "North Dakota", "Montana", "South Dakota"] },
+      { "q": "Which state searches for 'how to make meth'?", "a":["Missouri", "Indiana", "Arkansas", "Oklahoma"] },
+      { "q": "Which state has the highest divorce rate?", "a": ["Nevada", "Oklahoma", "Wyoming", "Arkansas"] },
+      { "q": "Which state searches for 'how to fight a bear'?", "a":["Alaska", "Montana", "Wyoming", "Idaho"] },
+      { "q": "Which state has the most cows per person?", "a": ["South Dakota", "Nebraska", "Montana", "Wyoming"] },
+      { "q": "Which state believes the earth is flat the most?", "a":["Colorado", "Texas", "Florida", "Georgia"] },
+      { "q": "Which state has the most missing persons per capita?", "a":["Alaska", "Arizona", "Oregon", "Washington"] },
+      { "q": "Which state thinks birds aren't real the most?", "a": ["California", "Texas", "Florida", "New York"] }
+    ]
+  }
+]
