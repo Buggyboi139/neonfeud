@@ -2,7 +2,7 @@
   "name": "Neon Feud - TV Edition",
   "short_name": "Neon Feud",
   "start_url": "./index.html",
-  "display": "fullscreen",
+  "display": "standalone",
   "orientation": "landscape",
   "background_color": "#030303",
   "theme_color": "#030303",
