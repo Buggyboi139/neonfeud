@@ -3,364 +3,437 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Neon Feud - Transparent Black Glass</title>
+<title>Neon Feud - TV Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800;900&display=swap" rel="stylesheet">
 <style>
     :root {
         --bg-solid: #030303;
         --purple-light: #b066ff;
-        --purple-glow: rgba(176, 102, 255, 0.5);
         --cyan: #00e5ff;
         --green: #00ff88;
         --red: #ff2a5f;
         --yellow: #ffb300;
         
-        /* Master Glass Panel Variables */
-        --master-glass-bg: linear-gradient(145deg, rgba(35, 35, 40, 0.25) 0%, rgba(5, 5, 8, 0.4) 100%);
+        --master-glass-bg: linear-gradient(145deg, rgba(35, 35, 40, 0.4) 0%, rgba(5, 5, 8, 0.6) 100%);
         --master-glass-border: rgba(255, 255, 255, 0.15);
-        --master-glass-shine: rgba(255, 255, 255, 0.3);
-        
-        /* Inner Panel Variables */
-        --inner-bg: rgba(0, 0, 0, 0.3);
-        --inner-border: rgba(255, 255, 255, 0.08);
+        --inner-bg: rgba(0, 0, 0, 0.5);
     }
 
-    * { box-sizing: border-box; font-family: 'Outfit', sans-serif; margin: 0; padding: 0; }
+    * { box-sizing: border-box; font-family: 'Outfit', sans-serif; margin: 0; padding: 0; user-select: none; }
 
     body {
         background-color: var(--bg-solid);
         color: #fff;
-        min-height: 100vh;
+        height: 100vh;
+        overflow: hidden;
         display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Portrait Lock Overlay */
+    #portrait-lock {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; width: 100vw; height: 100vh;
+        background: #000;
+        color: var(--cyan);
+        z-index: 99999;
         flex-direction: column;
         align-items: center;
-        overflow-x: hidden;
-        position: relative;
+        justify-content: center;
+        text-align: center;
+        font-size: 6vmin;
+        font-weight: 900;
+        padding: 10vw;
+    }
+    #portrait-lock span { font-size: 15vmin; margin-bottom: 2vh; display: block; }
+    
+    @media (orientation: portrait) {
+        #portrait-lock { display: flex; }
+        #app-container { display: none !important; }
     }
 
-    /* The moving light that shines through the transparent glass */
+    /* Ambient Background */
     .moving-light {
         position: fixed;
-        width: 80vw;
-        height: 80vw;
-        background: radial-gradient(circle, rgba(140, 50, 255, 0.45) 0%, rgba(0, 0, 0, 0) 65%);
+        width: 80vw; height: 80vw;
+        background: radial-gradient(circle, rgba(140, 50, 255, 0.4) 0%, rgba(0, 0, 0, 0) 65%);
         border-radius: 50%;
         z-index: -1;
-        filter: blur(90px);
-        pointer-events: none;
+        filter: blur(8vw);
         animation: roam 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
     }
-
     @keyframes roam {
         0% { top: -20%; left: -20%; transform: scale(1); }
-        33% { top: 20%; left: 60%; transform: scale(1.4); }
-        66% { top: 80%; left: -10%; transform: scale(0.8); }
+        50% { top: 20%; left: 60%; transform: scale(1.4); }
         100% { top: 10%; left: 80%; transform: scale(1.5); }
     }
 
-    /* Master Glass Wrapper */
-    .screen { 
+    #app-container {
+        width: 95vw;
+        height: 90vh;
+        position: relative;
+    }
+
+    .screen {
         display: none; 
-        width: 95%; 
-        max-width: 1100px; 
-        margin: 40px auto; 
-        padding: 40px; 
-        animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); 
-        
+        width: 100%; height: 100%;
         background: var(--master-glass-bg);
-        backdrop-filter: blur(35px);
-        -webkit-backdrop-filter: blur(35px);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
         border: 1px solid var(--master-glass-border);
-        border-top: 1px solid var(--master-glass-shine);
-        border-radius: 30px;
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), inset 0 1px 20px rgba(255, 255, 255, 0.05);
+        border-radius: 3vmin;
+        box-shadow: 0 4vmin 6vmin rgba(0, 0, 0, 0.8);
+        padding: 3vmin;
+        flex-direction: column;
     }
-    .screen.active { display: block; }
+    .screen.active { display: flex; animation: fadeIn 0.4s ease-out; }
 
-    /* Inner Glass Panels */
-    .inner-panel {
-        background: var(--inner-bg);
-        border: 1px solid var(--inner-border);
-        border-radius: 20px;
-        box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
-    }
+    @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
-    @keyframes slideUp {
-        from { opacity: 0; transform: translateY(40px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
+    /* Typography using vmin for TV scaling */
     .logo {
-        font-size: clamp(3.5rem, 8vw, 6rem);
+        font-size: 8vmin;
         font-weight: 900;
         text-align: center;
         text-transform: uppercase;
-        letter-spacing: -2px;
-        margin-bottom: 25px;
-        line-height: 1;
-        text-shadow: 0 10px 20px rgba(0,0,0,0.8);
+        letter-spacing: -0.2vmin;
+        margin-bottom: 2vmin;
+        text-shadow: 0 1vmin 2vmin rgba(0,0,0,0.8);
     }
+    .logo span { background: linear-gradient(to right, var(--cyan), var(--purple-light)); -webkit-background-clip: text; color: transparent; }
+    
+    h2 { text-align: center; color: #a0a0b0; font-weight: 300; font-size: 3.5vmin; margin-bottom: 3vmin; }
 
-    .logo span { 
-        background: linear-gradient(to right, var(--cyan), var(--purple-light)); 
-        -webkit-background-clip: text; 
-        color: transparent; 
-        text-shadow: 0 0 25px rgba(0, 229, 255, 0.4); 
-    }
-
-    h2 { text-align: center; color: #a0a0b0; font-weight: 300; font-size: 1.5rem; margin-bottom: 30px; letter-spacing: 2px; }
-
-    .btn-grid { display: flex; flex-direction: column; gap: 15px; max-width: 400px; margin: 0 auto; }
-
+    /* Buttons & Chunky Layout */
+    .btn-grid { display: flex; flex-direction: column; gap: 2vmin; width: 60%; margin: 0 auto; }
     button {
-        background: rgba(30, 30, 35, 0.4);
+        background: rgba(30, 30, 35, 0.6);
         border: 1px solid rgba(255, 255, 255, 0.15);
-        border-top: 1px solid rgba(255, 255, 255, 0.3);
         color: #fff;
-        padding: 20px 24px;
-        border-radius: 16px;
-        font-size: 1.3rem;
+        padding: 3vmin;
+        border-radius: 2vmin;
+        font-size: 3vmin;
         font-weight: 800;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: 0.2s;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        backdrop-filter: blur(10px);
     }
-
-    button:hover:not(:disabled) {
-        background: rgba(50, 50, 60, 0.6);
-        transform: translateY(-4px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 229, 255, 0.3);
-        border-color: var(--cyan);
-    }
-
+    button:hover:not(:disabled) { background: rgba(50, 50, 60, 0.8); border-color: var(--cyan); transform: translateY(-0.5vmin); }
+    button:active { transform: translateY(0); }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; margin-bottom: 25px; flex-wrap: wrap; gap: 15px; }
+    /* Header Bar */
+    .top-bar { display: flex; justify-content: space-between; align-items: center; background: var(--inner-bg); border-radius: 2vmin; padding: 2vmin 3vmin; margin-bottom: 2vmin; border: 1px solid var(--master-glass-border); }
+    .currency-bank { font-size: 4vmin; font-weight: 900; color: var(--yellow); text-shadow: 0 0 1vmin rgba(255, 179, 0, 0.5); }
+    
+    #scoreboard { display: flex; gap: 2vmin; flex: 1; justify-content: center; }
+    .score-pill { padding: 1.5vmin 3vmin; border-radius: 1.5vmin; background: rgba(0,0,0,0.6); font-weight: 800; font-size: 3vmin; transition: 0.3s; color: #ccc; border: 1px solid rgba(255,255,255,0.1); }
+    .active-team { background: rgba(0, 229, 255, 0.15); border-color: var(--cyan); color: var(--cyan); transform: scale(1.05); }
+    .stealing-team { background: rgba(255, 179, 0, 0.2); border-color: var(--yellow); color: var(--yellow); animation: pulseSteal 1s infinite alternate; }
 
-    #scoreboard { display: flex; gap: 12px; flex-wrap: wrap; flex: 1; justify-content: center; }
+    @keyframes pulseSteal { from { box-shadow: 0 0 1vmin var(--yellow); } to { box-shadow: 0 0 3vmin var(--yellow); } }
 
-    .score-pill {
-        padding: 12px 24px;
-        border-radius: 12px;
-        background: rgba(0,0,0,0.5);
-        border: 1px solid var(--inner-border);
-        font-weight: 800;
-        font-size: 1.2rem;
-        transition: all 0.3s;
-        color: #ccc;
-    }
+    #strikes-display { font-size: 6vmin; color: var(--red); font-weight: 900; letter-spacing: 1vmin; min-width: 15vmin; text-align: right; }
 
-    .active-team {
-        background: rgba(0, 229, 255, 0.15);
-        border-color: var(--cyan);
-        color: var(--cyan);
-        box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
-        transform: scale(1.05);
-    }
+    /* Game Area */
+    .query-box { font-size: 5vmin; font-weight: 800; text-align: center; padding: 4vmin; margin-bottom: 2vmin; background: var(--inner-bg); border-top: 0.5vmin solid var(--cyan); border-radius: 2vmin; }
+    
+    #steal-banner { display: none; background: var(--yellow); color: #000; text-align: center; font-weight: 900; font-size: 4vmin; padding: 1.5vmin; border-radius: 1vmin; margin-bottom: 2vmin; text-transform: uppercase; animation: shake 0.5s; }
 
-    #strikes-display { font-size: 2.5rem; color: var(--red); font-weight: 900; letter-spacing: 5px; text-shadow: 0 0 20px rgba(255, 42, 95, 0.6); min-width: 80px; text-align: right; }
-
-    .query-box { 
-        font-size: clamp(1.8rem, 4vw, 2.5rem); 
-        font-weight: 800; 
-        text-align: center; 
-        padding: 35px; 
-        margin-bottom: 25px; 
-        border-top: 4px solid var(--cyan); 
-    }
-
-    .board-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom: 30px; }
-
-    .board-row {
-        display: flex;
-        align-items: center;
-        background: rgba(0, 0, 0, 0.4);
-        border: 1px solid var(--inner-border);
-        border-radius: 16px;
-        padding: 15px 20px;
-        font-size: 1.4rem;
-        font-weight: 500;
-        text-transform: uppercase;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        overflow: hidden;
-    }
-
-    .board-row.revealed { background: rgba(0, 255, 136, 0.15); border-color: var(--green); transform: scale(1.02); }
+    .board-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2vmin; margin-bottom: 2vmin; }
+    .board-row { display: flex; align-items: center; background: rgba(0, 0, 0, 0.6); border: 1px solid var(--master-glass-border); border-radius: 2vmin; padding: 2.5vmin; font-size: 3.5vmin; font-weight: 500; text-transform: uppercase; }
+    .board-row.revealed { background: rgba(0, 255, 136, 0.15); border-color: var(--green); }
     .board-row.missed { background: rgba(255, 42, 95, 0.15); border-color: rgba(255, 42, 95, 0.3); opacity: 0.7; }
-
-    .rank { background: linear-gradient(135deg, var(--cyan), #0077ff); color: #fff; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 900; margin-right: 15px; font-size: 1.1rem; box-shadow: 0 0 10px rgba(0, 229, 255, 0.4); }
-    .ans-text { flex: 1; letter-spacing: 1px; }
-    .ans-pts { color: var(--green); font-weight: 900; font-size: 1.5rem; text-shadow: 0 0 10px rgba(0, 255, 136, 0.4); }
-
+    
+    .rank { background: linear-gradient(135deg, var(--cyan), #0077ff); color: #fff; width: 6vmin; height: 6vmin; display: flex; align-items: center; justify-content: center; border-radius: 1vmin; font-weight: 900; margin-right: 2vmin; font-size: 3vmin; }
+    .ans-text { flex: 1; }
+    .ans-pts { color: var(--green); font-weight: 900; font-size: 4vmin; }
     .hidden-content .ans-text, .hidden-content .ans-pts { opacity: 0; }
 
-    .choices-area { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; padding: 25px; }
+    /* Controller Area */
+    .choices-area { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2vmin; padding: 2vmin; background: var(--inner-bg); border-radius: 2vmin; flex-grow: 1; }
+    .choice-btn { min-height: 12vh; font-size: 3vmin; padding: 2vmin; display: flex; align-items: center; justify-content: center; word-wrap: break-word; line-height: 1.2; }
+    .choice-btn.correct { background: rgba(0, 255, 136, 0.25) !important; border-color: var(--green) !important; color: var(--green); }
+    .choice-btn.wrong { background: rgba(255, 42, 95, 0.25) !important; border-color: var(--red) !important; color: var(--red); animation: shake 0.4s; }
 
-    .choice-btn { min-height: 80px; display: flex; align-items: center; justify-content: center; padding: 15px; font-size: 1.1rem; line-height: 1.3; }
-    .choice-btn.correct { background: rgba(0, 255, 136, 0.25) !important; border-color: var(--green) !important; color: var(--green); box-shadow: 0 0 20px rgba(0, 255, 136, 0.2); }
-    .choice-btn.wrong { background: rgba(255, 42, 95, 0.25) !important; border-color: var(--red) !important; color: var(--red); box-shadow: 0 0 20px rgba(255, 42, 95, 0.2); animation: shake 0.4s; }
+    .give-up-btn { background: rgba(255, 42, 95, 0.2); border-color: var(--red); color: var(--red); margin-top: 2vmin; font-size: 3vmin; width: 100%; }
 
-    #next-round-btn, #play-again-btn { background: linear-gradient(45deg, var(--cyan), #0077ff); border: none; width: 100%; max-width: 400px; margin: 30px auto 0; display: none; padding: 20px; font-size: 1.4rem; box-shadow: 0 10px 30px rgba(0, 229, 255, 0.3); color: #fff; }
-    #play-again-btn { display: block; }
-    #next-round-btn:hover, #play-again-btn:hover { background: linear-gradient(45deg, #0077ff, var(--cyan)); }
+    /* Store UI */
+    .store-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3vmin; margin: 3vmin 0; overflow-y: auto; flex-grow: 1; }
+    .pack-card { background: var(--inner-bg); padding: 4vmin; border-radius: 2vmin; border: 1px solid var(--master-glass-border); text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
+    .pack-card h3 { font-size: 4vmin; color: var(--cyan); margin-bottom: 1vmin; }
+    .pack-card p { font-size: 2.5vmin; color: #aaa; margin-bottom: 3vmin; }
+    .buy-btn { background: var(--yellow); color: #000; border: none; font-size: 3vmin; padding: 2vmin; }
+    .buy-btn.owned { background: var(--green); opacity: 0.8; pointer-events: none; color: #000; }
 
-    .strike-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(255, 0, 50, 0.15); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
-    .strike-overlay.active { opacity: 1; animation: flashRed 0.8s ease-out forwards; }
-    .strike-mark { font-size: 25vw; color: var(--red); font-weight: 900; text-shadow: 0 0 50px var(--red); transform: scale(0.5); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-    .strike-overlay.active .strike-mark { transform: scale(1); }
+    /* End Screen */
+    .final-standings { display: flex; flex-direction: column; gap: 2vmin; margin-bottom: 4vmin; flex-grow: 1; justify-content: center; }
+    .final-row { display: flex; justify-content: space-between; align-items: center; font-size: 4vmin; padding: 3vmin 4vmin; background: rgba(0,0,0,0.5); border-radius: 2vmin; border-left: 1vmin solid var(--cyan); }
+    .winner-row { border-left-color: var(--yellow); background: rgba(255, 179, 0, 0.15); color: var(--yellow); font-weight: 900; transform: scale(1.02); }
+    .rank-title { display: block; font-size: 2.5vmin; color: #ccc; font-weight: 400; margin-top: 1vmin; }
 
-    .final-standings { display: flex; flex-direction: column; gap: 20px; margin-bottom: 40px; }
-    .final-row { display: flex; justify-content: space-between; font-size: 2rem; padding: 20px 30px; background: rgba(0,0,0,0.5); border-radius: 16px; border-left: 5px solid var(--cyan); border-right: 1px solid var(--inner-border); border-top: 1px solid var(--inner-border); border-bottom: 1px solid var(--inner-border); }
-    .winner-row { border-left-color: var(--yellow); background: rgba(255, 179, 0, 0.15); box-shadow: 0 0 30px rgba(255, 179, 0, 0.15); transform: scale(1.05); font-weight: 900; color: var(--yellow); }
-
-    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
-    @keyframes flashRed { 0% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; } }
-
-    @media (max-width: 600px) {
-        .screen { padding: 20px; border-radius: 20px; width: 98%; }
-        .board-grid { grid-template-columns: 1fr; }
-        .top-bar { flex-direction: column; text-align: center; padding: 15px; }
-        #strikes-display { text-align: center; }
-        .rank { margin-right: 10px; width: 28px; height: 28px; font-size: 0.9rem; }
-        .ans-text { font-size: 1.1rem; }
-        .ans-pts { font-size: 1.2rem; }
-    }
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-1vmin); } 75% { transform: translateX(1vmin); } }
 </style>
 </head>
 <body>
 
+<div id="portrait-lock">
+    <span>🔄</span>
+    Please Rotate<br>Your Device
+</div>
+
 <div class="moving-light"></div>
 
-<div class="strike-overlay" id="strike-screen">
-    <div class="strike-mark">X</div>
-</div>
-
-<div id="setup-screen" class="screen active">
-    <div class="logo"><span>Retro</span>Feud</div>
-    <h2>Select Game Mode</h2>
-    <div class="btn-grid">
-        <button onclick="startGame(1)">1 Player / Co-op</button>
-        <button onclick="startGame(2)">2 Teams</button>
-        <button onclick="startGame(3)">3 Teams</button>
-        <button onclick="startGame(4)">4 Teams</button>
-    </div>
-</div>
-
-<div id="game-screen" class="screen">
-    <div class="inner-panel top-bar">
-        <div id="scoreboard"></div>
-        <div id="strikes-display"></div>
+<div id="app-container">
+    
+    <!-- MAIN MENU -->
+    <div id="menu-screen" class="screen active">
+        <div class="top-bar">
+            <div></div>
+            <div class="currency-bank" id="menu-bank">💰 0 Coins</div>
+        </div>
+        <div class="logo" style="margin-top: 10vh;"><span>Retro</span>Feud</div>
+        <h2>Search Engine Showdown</h2>
+        <div class="btn-grid">
+            <button onclick="goToPackSelect()">Play Game</button>
+            <button onclick="goToStore()">Store / Packs</button>
+        </div>
     </div>
 
-    <div class="inner-panel query-box" id="question-text"></div>
+    <!-- STORE -->
+    <div id="store-screen" class="screen">
+        <div class="top-bar">
+            <button onclick="showScreen('menu-screen')" style="padding: 1.5vmin; font-size: 2.5vmin;">⬅ Back</button>
+            <div class="currency-bank" id="store-bank">💰 0 Coins</div>
+        </div>
+        <div class="logo"><span>Pack</span> Store</div>
+        <div class="store-grid" id="store-container"></div>
+    </div>
 
-    <div class="board-grid" id="board-container"></div>
+    <!-- PACK & TEAM SELECT -->
+    <div id="setup-screen" class="screen">
+        <div class="top-bar">
+            <button onclick="showScreen('menu-screen')" style="padding: 1.5vmin; font-size: 2.5vmin;">⬅ Back</button>
+        </div>
+        <div class="logo"><span>Setup</span></div>
+        <h2>1. Select Pack</h2>
+        <div class="btn-grid" id="pack-select-container" style="flex-direction: row; flex-wrap: wrap; justify-content: center; margin-bottom: 4vmin;"></div>
+        
+        <h2>2. Teams Mode</h2>
+        <div class="btn-grid" style="display: none;" id="team-select-container">
+            <button onclick="startGame(1)">1 Player (Co-op)</button>
+            <button onclick="startGame(2)">2 Teams</button>
+            <button onclick="startGame(3)">3 Teams</button>
+            <button onclick="startGame(4)">4 Teams</button>
+        </div>
+    </div>
 
-    <div class="inner-panel choices-area" id="choices-container"></div>
+    <!-- GAMEPLAY -->
+    <div id="game-screen" class="screen">
+        <div class="top-bar">
+            <div id="scoreboard"></div>
+            <div id="strikes-display"></div>
+        </div>
 
-    <button id="next-round-btn" onclick="nextRound()">Next Round ➔</button>
-</div>
+        <div id="steal-banner">🚨 STEAL OPPORTUNITY! ONE GUESS ONLY! 🚨</div>
 
-<div id="end-screen" class="screen">
-    <div class="logo"><span>Game</span>Over</div>
-    <h2>Final Scores</h2>
-    <div class="final-standings" id="final-standings"></div>
-    <button id="play-again-btn" onclick="location.reload()">Play Again</button>
+        <div class="query-box" id="question-text"></div>
+
+        <div class="board-grid" id="board-container"></div>
+
+        <div class="choices-area" id="choices-container"></div>
+
+        <button class="give-up-btn" id="give-up-btn" onclick="giveUpRound()">Reveal Board (Give Up)</button>
+        <button class="give-up-btn" id="next-round-btn" style="display:none; background: var(--cyan); color: #000;" onclick="nextRound()">Next Round ➔</button>
+    </div>
+
+    <!-- END SCREEN -->
+    <div id="end-screen" class="screen">
+        <div class="logo"><span>Game</span>Over</div>
+        <h2 id="end-earned">You earned XXX Coins!</h2>
+        <div class="final-standings" id="final-standings"></div>
+        <div class="btn-grid">
+            <button onclick="location.reload()">Main Menu</button>
+        </div>
+    </div>
+
 </div>
 
 <script>
-const library =[
-    { q: "Why does my dog...", a:["eat grass", "lick me", "stare at me", "sigh"], d:["do taxes", "speak french", "drive", "zoom", "invest in crypto", "judge my outfits"] },
-    { q: "Which state searched for 'sugar daddies' the most?", a:["Nevada", "Florida", "Georgia", "New York"], d:["Idaho", "Wyoming", "Montana", "South Dakota", "North Dakota", "Nebraska"] },
-    { q: "I accidentally ate...", a:["mold", "raw chicken", "plastic", "a bug"], d:["a car", "my homework", "a ghost", "gravity", "a magnet", "dry ice"] },
-    { q: "Which state has the worst drivers?", a:["Massachusetts", "New Jersey", "Florida", "California"], d:["Ohio", "Texas", "Nevada", "Wyoming", "Alaska", "Hawaii"] },
-    { q: "My husband thinks he is...", a:["always right", "a woman", "god", "funny"], d:["a potato", "batman", "invisible", "a cat", "a sovereign citizen", "the president"] },
-    { q: "Which state has the most serial killers per capita?", a:["Alaska", "Nevada", "Florida", "California"], d:["Wyoming", "South Dakota", "Vermont", "Maine", "North Dakota", "Nebraska"] },
-    { q: "Can you die from...", a:["a broken heart", "drinking too much water", "lack of sleep", "holding your breath"], d:["doing math", "bad jokes", "singing off key", "blinking", "eating too much cheese", "extreme boredom"] },
-    { q: "Which state searches for 'is it legal to own a raccoon'?", a:["Texas", "Florida", "Tennessee", "Ohio"], d:["Alaska", "Maine", "Hawaii", "Delaware", "Rhode Island", "Idaho"] },
-    { q: "Do ghosts...", a:["exist", "sleep", "eat", "feel cold"], d:["pay taxes", "use wifi", "vote", "shop", "get sunburned", "have passports"] },
-    { q: "Which state searches for 'UFO sightings' the most?", a:["Idaho", "Montana", "New Mexico", "Wyoming"], d:["New Jersey", "Delaware", "Rhode Island", "Connecticut", "Maryland", "Massachusetts"] },
-    { q: "Why does it hurt when I...", a:["pee", "breathe", "swallow", "poop"], d:["think", "wink", "smile", "exist", "look at my bank account", "do math"] },
-    { q: "Which state has the most fast food restaurants?", a:["Alabama", "Nebraska", "West Virginia", "Oklahoma"], d:["Vermont", "Maine", "Alaska", "Hawaii", "Montana", "Wyoming"] },
-    { q: "Why is my poop...", a:["green", "black", "floating", "spicy"], d:["glowing", "invisible", "square", "screaming", "musical", "carbonated"] },
-    { q: "Which state drinks the most beer?", a:["Wisconsin", "North Dakota", "Montana", "South Dakota"], d:["Utah", "New York", "California", "Hawaii", "New Jersey", "Connecticut"] },
-    { q: "Why did they cancel...", a:["firefly", "manifest", "the owl house", "mindhunter"], d:["gravity", "the sun", "tuesday", "breathing", "the alphabet", "sleep"] },
-    { q: "Which state searches for 'how to make meth'?", a:["Missouri", "Indiana", "Arkansas", "Oklahoma"], d:["Hawaii", "Alaska", "Vermont", "Maine", "Rhode Island", "Delaware"] },
-    { q: "Which state has the highest divorce rate?", a:["Nevada", "Oklahoma", "Wyoming", "Arkansas"], d:["New York", "New Jersey", "Massachusetts", "Hawaii", "California", "Utah"] },
-    { q: "Which US territory searches for 'is bestiality legal'?", a:["Indiana", "Louisiana", "Kentucky", "Texas"], d:["New York", "Hawaii", "Alaska", "Maine", "Vermont", "Rhode Island"] },
-    { q: "Which state searches for 'how to fight a bear'?", a:["Alaska", "Montana", "Wyoming", "Idaho"], d:["Florida", "Texas", "New York", "California", "Nevada", "Arizona"] },
-    { q: "Which state has the most cows per person?", a:["South Dakota", "Nebraska", "Montana", "Wyoming"], d:["New York", "California", "Florida", "Texas", "New Jersey", "Massachusetts"] },
-    { q: "Which state believes the earth is flat the most?", a:["Colorado", "Texas", "Florida", "Georgia"], d:["Vermont", "Maine", "Alaska", "Hawaii", "Washington", "Oregon"] },
-    { q: "Is it illegal to...", a:["drive barefoot", "kill a praying mantis", "own a monkey", "collect rainwater"], d:["eat soup with a fork", "sleep in a bank", "blink rapidly", "eat a swan", "marry a ghost", "walk backwards"] },
-    { q: "Which state searches for 'how to fake a drug test'?", a:["Louisiana", "Mississippi", "Alabama", "Kentucky"], d:["Utah", "Colorado", "Washington", "Oregon", "Vermont", "Massachusetts"] },
-    { q: "Which state has the most UFO sightings per capita?", a:["Washington", "Montana", "Alaska", "Vermont"], d:["New York", "Florida", "Texas", "California", "Georgia", "Illinois"] },
-    { q: "How to hide a...", a:["hickey", "dead body", "fart", "pregnancy"], d:["stolen jet", "mountain", "planet", "secret", "dinosaur", "giraffe"] },
-    // 25 NEW QUESTIONS BELOW
-    { q: "Which state searches for 'how to get away with murder'?", a:["Delaware", "Nevada", "Alaska", "Wyoming"], d:["Hawaii", "Rhode Island", "New York", "California", "Texas", "Ohio"] },
-    { q: "Which state searches for 'how to uncurse myself'?", a:["Louisiana", "Florida", "Mississippi", "Alabama"], d:["Washington", "Oregon", "Montana", "Idaho", "Utah", "Colorado"] },
-    { q: "Why is the government hiding...", a:["aliens", "the cure for cancer", "giants", "time travel"], d:["my keys", "the remote", "my dad", "good music", "affordable housing", "dinosaurs"] },
-    { q: "Which state has the most recorded Bigfoot sightings?", a:["Washington", "Oregon", "California", "Idaho"], d:["Rhode Island", "Delaware", "New Jersey", "Connecticut", "Maryland", "Hawaii"] },
-    { q: "Which state has the most DUIs per capita?", a:["North Dakota", "South Dakota", "Wyoming", "Montana"], d:["New York", "New Jersey", "Massachusetts", "Rhode Island", "Utah", "Hawaii"] },
-    { q: "Which state searches for 'how to join the illuminati'?", a:["Georgia", "Texas", "Florida", "New York"], d:["Vermont", "Maine", "Wyoming", "Alaska", "North Dakota", "South Dakota"] },
-    { q: "Can I legally marry a...", a:["cousin", "tree", "dog", "ghost"], d:["pizza", "hologram", "car", "robot", "video game character", "dolphin"] },
-    { q: "Which state has the most felonies per capita?", a:["Louisiana", "Mississippi", "Arkansas", "Oklahoma"], d:["Vermont", "Maine", "New Hampshire", "Utah", "Hawaii", "Alaska"] },
-    { q: "Which state searches for 'where to bury gold'?", a:["Utah", "Idaho", "Montana", "Nevada"], d:["Florida", "New York", "New Jersey", "Maryland", "Connecticut", "Delaware"] },
-    { q: "Why is my room...", a:["so hot", "so dusty", "haunted", "smelling like rotten eggs"], d:["glowing", "vibrating", "upside down", "invisible", "screaming", "breathing"] },
-    { q: "Which state searches for 'are vampires real'?", a:["Fiorida", "Texas", "California", "Louisiana"], d:["Wyoming", "Idaho", "Montana", "South Dakota", "North Dakota", "Nebraska"] },
-    { q: "What happens if I microwave a...", a:["cd", "marshmallow", "lightbulb", "penny"], d:["ghost", "cloud", "black hole", "laser", "thought", "dream"] },
-    { q: "Which state searches for 'how to outrun a cop car'?", a:["Florida", "Texas", "Georgia", "Alabama"], d:["Hawaii", "Vermont", "Maine", "Rhode Island", "Delaware", "Alaska"] },
-    { q: "Which state has the highest percentage of juggalos?", a:["Michigan", "Ohio", "Indiana", "Illinois"], d:["Hawaii", "Alaska", "Utah", "Vermont", "Maine", "Rhode Island"] },
-    { q: "Is it illegal to name your child...", a:["Hitler", "God", "Nutella", "King"], d:["Pizza", "Chair", "Table", "Spoon", "Fork", "Car"] },
-    { q: "Which state searches for 'how to survive a zombie apocalypse'?", a:["Alaska", "Montana", "Wyoming", "Idaho"], d:["Rhode Island", "Delaware", "New Jersey", "Connecticut", "Maryland", "Hawaii"] },
-    { q: "Which state searches for 'is time travel possible'?", a:["California", "New York", "Texas", "Washington"], d:["Wyoming", "North Dakota", "South Dakota", "Montana", "Idaho", "Nebraska"] },
-    { q: "Why do British people...", a:["say innit", "have bad teeth", "drink so much tea", "talk like that"], d:["glow in the dark", "breathe water", "eat rocks", "fly", "teleport", "lay eggs"] },
-    { q: "Which state searches for 'sugar mamas'?", a:["California", "Texas", "Florida", "New York"], d:["Wyoming", "Idaho", "Montana", "North Dakota", "South Dakota", "Nebraska"] },
-    { q: "How to legally steal...", a:["a dog", "money", "wifi", "land"], d:["a planet", "the moon", "a ghost", "gravity", "time", "clouds"] },
-    { q: "Which state searches for 'how to live in the woods'?", a:["Alaska", "Montana", "Idaho", "Maine"], d:["New Jersey", "Rhode Island", "Delaware", "Connecticut", "Maryland", "Hawaii"] },
-    { q: "Which state has the most missing persons per capita?", a:["Alaska", "Arizona", "Oregon", "Washington"], d:["Rhode Island", "Delaware", "New Jersey", "Connecticut", "Maryland", "Massachusetts"] },
-    { q: "Can a human fight a...", a:["kangaroo", "chimpanzee", "bear", "wolf"], d:["black hole", "hurricane", "ghost", "concept", "cloud", "math problem"] },
-    { q: "Which state thinks birds aren't real the most?", a:["California", "Texas", "Florida", "New York"], d:["Wyoming", "Montana", "Idaho", "North Dakota", "South Dakota", "Nebraska"] },
-    { q: "What happens if I drink...", a:["bleach", "hydrogen peroxide", "rubbing alcohol", "blood"], d:["lava", "liquid nitrogen", "a cloud", "gravity", "time", "dark matter"] }
-];
+// Audio Setup (Replace files in your directory)
+const sfx = {
+    click: new Audio('click.mp3'),
+    ding: new Audio('ding.mp3'),
+    buzzer: new Audio('buzzer.mp3'),
+    chaching: new Audio('chaching.mp3')
+};
+function playSfx(name) {
+    if(sfx[name]) {
+        sfx[name].currentTime = 0;
+        sfx[name].play().catch(e => console.log("Audio play blocked by browser."));
+    } else {
+        // Fallback to click if specific sounds are missing
+        sfx.click.currentTime = 0;
+        sfx.click.play().catch(e => {});
+    }
+}
 
+// Economy State
+let bank = parseInt(localStorage.getItem('rf_coins')) || 0;
+let unlockedPacks = JSON.parse(localStorage.getItem('rf_unlocks')) || ['wild_web'];
+
+// Game State
+let allPacks = [];
+let selectedPack = null;
+let activeQuestions = [];
 let teams =[];
 let currentTeamIdx = 0;
 let currentQIdx = 0;
+
+// Round State
 let strikes = 0;
+let roundBank = 0;
 let currentAnswers =[];
 let revealedCount = 0;
 let isCoop = false;
+let isStealMode = false;
+let totalPossibleReveals = 0;
+let totalActualReveals = 0;
 
-function shuffle(arr) {
-    for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
+// Initialization
+window.onload = async () => {
+    updateBankUI();
+    try {
+        const response = await fetch('packs.json');
+        allPacks = await response.json();
+    } catch (e) {
+        alert("Error loading packs.json! Make sure it's in the same folder and you are running a local server.");
     }
-    return arr;
+};
+
+function updateBankUI() {
+    document.getElementById('menu-bank').textContent = `💰 ${bank} Coins`;
+    document.getElementById('store-bank').textContent = `💰 ${bank} Coins`;
+    localStorage.setItem('rf_coins', bank);
+    localStorage.setItem('rf_unlocks', JSON.stringify(unlockedPacks));
+}
+
+function showScreen(id) {
+    playSfx('click');
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+// Store Logic
+function goToStore() {
+    showScreen('store-screen');
+    const container = document.getElementById('store-container');
+    container.innerHTML = '';
+    
+    allPacks.forEach(pack => {
+        const isOwned = unlockedPacks.includes(pack.id) || pack.unlockedByDefault;
+        if(pack.unlockedByDefault && !unlockedPacks.includes(pack.id)) unlockedPacks.push(pack.id);
+
+        const card = document.createElement('div');
+        card.className = 'pack-card';
+        card.innerHTML = `
+            <div>
+                <h3>${pack.name}</h3>
+                <p>${pack.description}</p>
+                <p style="color:var(--cyan)">${pack.questions.length} Questions</p>
+            </div>
+            <button class="buy-btn ${isOwned ? 'owned' : ''}" onclick="buyPack('${pack.id}', ${pack.price})">
+                ${isOwned ? 'Owned' : 'Buy: 💰 ' + pack.price}
+            </button>
+        `;
+        container.appendChild(card);
+    });
+    updateBankUI();
+}
+
+function buyPack(id, price) {
+    if(bank >= price) {
+        bank -= price;
+        unlockedPacks.push(id);
+        playSfx('chaching');
+        goToStore(); // refresh
+    } else {
+        playSfx('buzzer');
+        alert("Not enough coins!");
+    }
+}
+
+// Game Setup Logic
+function goToPackSelect() {
+    showScreen('setup-screen');
+    const pContainer = document.getElementById('pack-select-container');
+    const tContainer = document.getElementById('team-select-container');
+    pContainer.innerHTML = '';
+    tContainer.style.display = 'none';
+
+    allPacks.forEach(pack => {
+        if(unlockedPacks.includes(pack.id) || pack.unlockedByDefault) {
+            const btn = document.createElement('button');
+            btn.textContent = pack.name;
+            btn.style.width = '45%';
+            btn.onclick = () => {
+                document.querySelectorAll('#pack-select-container button').forEach(b => b.style.borderColor = 'rgba(255,255,255,0.15)');
+                btn.style.borderColor = 'var(--cyan)';
+                selectedPack = pack;
+                tContainer.style.display = 'flex';
+                playSfx('click');
+            };
+            pContainer.appendChild(btn);
+        }
+    });
 }
 
 function startGame(numTeams) {
-    isCoop = numTeams === 1;
+    playSfx('click');
+    isCoop = (numTeams === 1);
     teams = Array.from({length: numTeams}, (_, i) => ({ id: i+1, score: 0 }));
-    shuffle(library);
-    document.getElementById('setup-screen').classList.remove('active');
-    document.getElementById('game-screen').classList.add('active');
+    
+    // Pick 5 random questions for a session
+    activeQuestions = [...selectedPack.questions].sort(() => 0.5 - Math.random()).slice(0, 5);
+    totalPossibleReveals = activeQuestions.length * 4;
+    totalActualReveals = 0;
+    
+    currentQIdx = 0;
+    showScreen('game-screen');
     setupRound();
 }
 
+// Dynamic Distractor Generator
+function getDistractors(currentQuestion, pack) {
+    let allValidAnswers =[];
+    pack.questions.forEach(q => {
+        if(q.q !== currentQuestion.q) allValidAnswers.push(...q.a);
+    });
+    // Ensure unique choices
+    let uniqueDistractors = [...new Set(allValidAnswers)].sort(() => 0.5 - Math.random());
+    return uniqueDistractors.slice(0, 4);
+}
+
 function setupRound() {
-    let qData = library[currentQIdx];
+    let qData = activeQuestions[currentQIdx];
     document.getElementById('question-text').textContent = qData.q + (qData.q.endsWith('?') ? "" : "...");
     document.getElementById('strikes-display').textContent = '';
     document.getElementById('next-round-btn').style.display = 'none';
+    document.getElementById('give-up-btn').style.display = 'block';
+    document.getElementById('steal-banner').style.display = 'none';
+    
     strikes = 0;
+    roundBank = 0;
     revealedCount = 0;
+    isStealMode = false;
 
+    // Streamlined points: 100, 75, 50, 25
+    const ptsArray =[100, 75, 50, 25];
     currentAnswers = qData.a.map((text, index) => ({
         text: text,
-        points: (4 - index) * 1000,
+        points: ptsArray[index],
         revealed: false
     }));
 
@@ -370,17 +443,15 @@ function setupRound() {
         let row = document.createElement('div');
         row.className = 'board-row hidden-content';
         row.id = `row-${idx}`;
-        row.innerHTML = `
-            <div class="rank">${idx + 1}</div>
-            <div class="ans-text">${ans.text}</div>
-            <div class="ans-pts">${ans.points}</div>
-        `;
+        row.innerHTML = `<div class="rank">${idx + 1}</div><div class="ans-text">${ans.text}</div><div class="ans-pts">${ans.points}</div>`;
         board.appendChild(row);
     });
 
     const choices = document.getElementById('choices-container');
     choices.innerHTML = '';
-    let combinedChoices = shuffle([...qData.a, ...shuffle(qData.d).slice(0, 4)]);
+    
+    let distractors = getDistractors(qData, selectedPack);
+    let combinedChoices = [...qData.a, ...distractors].sort(() => 0.5 - Math.random());
     
     combinedChoices.forEach(choice => {
         let btn = document.createElement('button');
@@ -400,13 +471,19 @@ function renderScores() {
     if (isCoop) {
         let pill = document.createElement('div');
         pill.className = 'score-pill active-team';
-        pill.textContent = `SCORE: ${teams[0].score}`;
+        pill.textContent = `SCORE: ${teams[0].score + roundBank}`;
         sb.appendChild(pill);
     } else {
         teams.forEach((t, i) => {
             let pill = document.createElement('div');
-            pill.className = `score-pill ${i === currentTeamIdx ? 'active-team' : ''}`;
-            pill.textContent = `TEAM ${t.id}: ${t.score}`;
+            let statusClass = '';
+            if(i === currentTeamIdx && !isStealMode) statusClass = 'active-team';
+            if(i === currentTeamIdx && isStealMode) statusClass = 'stealing-team';
+            
+            pill.className = `score-pill ${statusClass}`;
+            let displayScore = t.score;
+            if (statusClass !== '') displayScore += ` (+${roundBank} Bank)`;
+            pill.textContent = `TEAM ${t.id}: ${displayScore}`;
             sb.appendChild(pill);
         });
     }
@@ -416,21 +493,48 @@ function processChoice(btn, choiceText) {
     let matchIdx = currentAnswers.findIndex(a => a.text === choiceText);
 
     if (matchIdx !== -1 && !currentAnswers[matchIdx].revealed) {
+        // Correct Guess
+        playSfx('ding');
         currentAnswers[matchIdx].revealed = true;
         revealedCount++;
+        totalActualReveals++;
         btn.classList.add('correct');
         
         let row = document.getElementById(`row-${matchIdx}`);
         row.classList.remove('hidden-content');
         row.classList.add('revealed');
         
-        teams[currentTeamIdx].score += currentAnswers[matchIdx].points;
-        renderScores();
-
-        if (revealedCount === 4) finishRound();
+        if (isStealMode) {
+            // Successful steal!
+            teams[currentTeamIdx].score += (roundBank + currentAnswers[matchIdx].points);
+            roundBank = 0;
+            finishRound();
+        } else {
+            // Normal play
+            roundBank += currentAnswers[matchIdx].points;
+            renderScores();
+            if (revealedCount === 4) {
+                teams[currentTeamIdx].score += roundBank;
+                roundBank = 0;
+                finishRound();
+            }
+        }
     } else {
+        // Wrong Guess
+        playSfx('buzzer');
         btn.classList.add('wrong');
-        triggerStrike();
+        btn.disabled = true;
+
+        if (isStealMode) {
+            // Failed Steal. Original team keeps bank.
+            let originalTeam = (currentTeamIdx - 1 + teams.length) % teams.length;
+            teams[originalTeam].score += roundBank;
+            roundBank = 0;
+            finishRound();
+        } else {
+            // Normal Strike
+            triggerStrike();
+        }
     }
 }
 
@@ -438,21 +542,34 @@ function triggerStrike() {
     strikes++;
     document.getElementById('strikes-display').textContent = 'X '.repeat(strikes).trim();
     
-    let overlay = document.getElementById('strike-screen');
-    overlay.classList.remove('active');
-    void overlay.offsetWidth; 
-    overlay.classList.add('active');
-
     if (strikes >= 3) {
-        setTimeout(finishRound, 800);
-    } else if (!isCoop) {
-        currentTeamIdx = (currentTeamIdx + 1) % teams.length;
-        renderScores();
+        if (isCoop) {
+            // Co-op loses bank on 3 strikes
+            roundBank = 0; 
+            setTimeout(finishRound, 1000);
+        } else {
+            // Steal Mode Activated
+            setTimeout(() => {
+                isStealMode = true;
+                currentTeamIdx = (currentTeamIdx + 1) % teams.length;
+                document.getElementById('steal-banner').style.display = 'block';
+                document.getElementById('strikes-display').textContent = '';
+                renderScores();
+            }, 1000);
+        }
     }
+}
+
+function giveUpRound() {
+    playSfx('click');
+    roundBank = 0;
+    finishRound();
 }
 
 function finishRound() {
     document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+    document.getElementById('give-up-btn').style.display = 'none';
+    document.getElementById('next-round-btn').style.display = 'block';
     
     currentAnswers.forEach((ans, idx) => {
         if (!ans.revealed) {
@@ -461,35 +578,59 @@ function finishRound() {
             row.classList.add('missed');
         }
     });
-    
-    document.getElementById('next-round-btn').style.display = 'block';
+    renderScores();
 }
 
 function nextRound() {
+    playSfx('click');
     currentQIdx++;
-    if (currentQIdx >= library.length) {
+    if (currentQIdx >= activeQuestions.length) {
         showGameOver();
     } else {
-        if (!isCoop) currentTeamIdx = (currentTeamIdx + 1) % teams.length;
+        if (!isCoop && !isStealMode) {
+            // If they didn't strike out/steal, next team's turn starts
+            currentTeamIdx = (currentTeamIdx + 1) % teams.length;
+        }
+        // If it was steal mode, currentTeamIdx is already on the stealing team, let them start next round
         setupRound();
     }
 }
 
 function showGameOver() {
-    document.getElementById('game-screen').classList.remove('active');
-    document.getElementById('end-screen').classList.add('active');
+    showScreen('end-screen');
+    playSfx('chaching');
     
     let standings = document.getElementById('final-standings');
+    standings.innerHTML = '';
     let sortedTeams = [...teams].sort((a, b) => b.score - a.score);
     
+    // Calculate Accuracy & Rank
+    let accuracy = totalActualReveals / totalPossibleReveals;
+    let title = "";
+    if(accuracy >= 0.9) title = "Search Engine Scholars 🎓";
+    else if(accuracy >= 0.7) title = "Algorithm Whisperers 🤖";
+    else if(accuracy >= 0.5) title = "Autocomplete Amateurs ⌨️";
+    else title = "Incognito Mode Rookies 🕵️";
+
+    // Reward: Winning score goes to Bank (Coop = total score)
+    let reward = sortedTeams[0].score;
+    bank += reward;
+    updateBankUI();
+    document.getElementById('end-earned').textContent = `Earned ${reward} Coins!`;
+
     sortedTeams.forEach((t, i) => {
         let row = document.createElement('div');
         row.className = `final-row ${i === 0 ? 'winner-row' : ''}`;
-        if (isCoop) {
-            row.innerHTML = `<span>Final Score:</span><span>${t.score} PTS</span>`;
-        } else {
-            row.innerHTML = `<span>Team ${t.id} ${i === 0 ? '🏆' : ''}</span><span>${t.score}</span>`;
-        }
+        
+        let teamName = isCoop ? 'Final Score' : `Team ${t.id} ${i === 0 ? '👑' : ''}`;
+        
+        row.innerHTML = `
+            <div>
+                ${teamName}
+                ${i === 0 ? `<span class="rank-title">Rank: ${title}</span>` : ''}
+            </div>
+            <span>${t.score}</span>
+        `;
         standings.appendChild(row);
     });
 }
