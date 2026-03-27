@@ -1,4 +1,4 @@
-const CACHE_NAME = 'neon-feud-v3';
+const CACHE_NAME = 'neon-feud-v4';
 const ASSETS_TO_CACHE =[
   './',
   './index.html',
