@@ -56,7 +56,7 @@
         100% { top: 10%; left: 80%; transform: scale(1.5); }
     }
 
-    #app-container { width: 95vw; height: 90vh; position: relative; }
+    #app-container { width: 95vw; height: 95vh; position: relative; }
 
     .screen {
         display: none; width: 100%; height: 100%;
@@ -64,6 +64,7 @@
         -webkit-backdrop-filter: blur(25px); border: 1px solid var(--master-glass-border);
         border-radius: 3vmin; box-shadow: 0 4vmin 6vmin rgba(0, 0, 0, 0.8);
         padding: 3vmin; flex-direction: column;
+        overflow-y: auto; /* ALLOWS SCROLLING SO BUTTONS AREN'T LOST */
     }
     .screen.active { display: flex; animation: fadeIn 0.4s ease-out; }
 
@@ -80,12 +81,20 @@
     .btn-grid { display: flex; flex-direction: column; gap: 2vmin; width: 60%; margin: 0 auto; }
     button {
         background: rgba(30, 30, 35, 0.6); border: 1px solid rgba(255, 255, 255, 0.15);
-        color: #fff; padding: 3vmin; border-radius: 2vmin; font-size: 3vmin;
+        color: #fff; padding: 2.5vmin; border-radius: 2vmin; font-size: 3vmin;
         font-weight: 800; cursor: pointer; transition: 0.2s; text-transform: uppercase;
     }
     button:hover:not(:disabled) { background: rgba(50, 50, 60, 0.8); border-color: var(--cyan); transform: translateY(-0.5vmin); }
     button:active { transform: translateY(0); }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Quit Button Styling */
+    .back-btn { 
+        background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); 
+        padding: 1.5vmin 2vmin; border-radius: 1vmin; font-size: 2.2vmin; color: #fff; 
+        text-transform: uppercase; cursor: pointer; transition: 0.2s; width: auto; 
+    }
+    .back-btn:hover { background: rgba(255,42,95,0.4); border-color: var(--red); }
 
     .top-bar { display: flex; justify-content: space-between; align-items: center; background: var(--inner-bg); border-radius: 2vmin; padding: 2vmin 3vmin; margin-bottom: 2vmin; border: 1px solid var(--master-glass-border); }
     .currency-bank { font-size: 4vmin; font-weight: 900; color: var(--yellow); text-shadow: 0 0 1vmin rgba(255, 179, 0, 0.5); }
@@ -97,9 +106,9 @@
 
     @keyframes pulseSteal { from { box-shadow: 0 0 1vmin var(--yellow); } to { box-shadow: 0 0 3vmin var(--yellow); } }
 
-    #strikes-display { font-size: 6vmin; color: var(--red); font-weight: 900; letter-spacing: 1vmin; min-width: 15vmin; text-align: right; }
+    #strikes-display { font-size: 5vmin; color: var(--red); font-weight: 900; letter-spacing: 1vmin; min-width: 15vmin; text-align: right; }
 
-    .query-box { font-size: 5vmin; font-weight: 800; text-align: center; padding: 4vmin; margin-bottom: 2vmin; background: var(--inner-bg); border-top: 0.5vmin solid var(--cyan); border-radius: 2vmin; }
+    .query-box { font-size: 4.5vmin; font-weight: 800; text-align: center; padding: 3vmin; margin-bottom: 2vmin; background: var(--inner-bg); border-top: 0.5vmin solid var(--cyan); border-radius: 2vmin; }
     
     #steal-banner { display: none; background: var(--yellow); color: #000; text-align: center; font-weight: 900; font-size: 3vmin; padding: 1.5vmin; border-radius: 1vmin; margin-bottom: 2vmin; text-transform: uppercase; animation: shake 0.5s; }
 
@@ -113,21 +122,21 @@
     .ans-pts { color: var(--green); font-weight: 900; font-size: 4vmin; }
     .hidden-content .ans-text, .hidden-content .ans-pts { opacity: 0; }
 
-    /* Letter Pool Board */
+    /* Letter Pool Board - Compacted Sizes */
     #letter-board-container { display: none; justify-content: center; gap: 1.5vmin; margin-bottom: 3vmin; flex-wrap: wrap; }
-    .letter-blank { width: 6vmin; height: 8vmin; border-bottom: 0.8vmin solid var(--cyan); display: flex; align-items: center; justify-content: center; font-size: 6vmin; font-weight: 900; color: #fff; text-transform: uppercase; transition: all 0.3s ease; }
+    .letter-blank { width: 5vmin; height: 6vmin; border-bottom: 0.6vmin solid var(--cyan); display: flex; align-items: center; justify-content: center; font-size: 5vmin; font-weight: 900; color: #fff; text-transform: uppercase; transition: all 0.3s ease; }
     .letter-blank.hidden-letter { color: transparent; }
     .letter-blank.revealed-letter { color: var(--green); text-shadow: 0 0 1.5vmin rgba(0, 255, 136, 0.5); border-color: var(--green); transform: scale(1.1); }
     .letter-blank.missed-letter { color: var(--red); border-color: var(--red); opacity: 0.7; }
 
-    /* Controller Area */
-    .choices-area { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2vmin; padding: 2vmin; background: var(--inner-bg); border-radius: 2vmin; flex-grow: 1; }
-    .choice-btn { min-height: 12vh; font-size: 3vmin; padding: 2vmin; display: flex; align-items: center; justify-content: center; word-wrap: break-word; line-height: 1.2; }
-    .choice-btn.letter-btn { font-size: 5vmin; font-weight: 900; min-height: 8vh; }
+    /* Controller Area - Slimmer Padding */
+    .choices-area { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5vmin; padding: 2vmin; background: var(--inner-bg); border-radius: 2vmin; flex-grow: 1; align-content: start; }
+    .choice-btn { font-size: 3vmin; padding: 2vmin; display: flex; align-items: center; justify-content: center; word-wrap: break-word; line-height: 1.2; }
+    .choice-btn.letter-btn { font-size: 4vmin; font-weight: 900; padding: 1.5vmin; }
     .choice-btn.correct { background: rgba(0, 255, 136, 0.25) !important; border-color: var(--green) !important; color: var(--green); }
     .choice-btn.wrong { background: rgba(255, 42, 95, 0.25) !important; border-color: var(--red) !important; color: var(--red); animation: shake 0.4s; }
 
-    .give-up-btn { background: rgba(255, 42, 95, 0.2); border-color: var(--red); color: var(--red); margin-top: 2vmin; font-size: 3vmin; width: 100%; }
+    .give-up-btn { background: rgba(255, 42, 95, 0.2); border-color: var(--red); color: var(--red); margin-top: 2vmin; font-size: 3vmin; width: 100%; padding: 2.5vmin; flex-shrink: 0; }
 
     .store-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3vmin; margin: 3vmin 0; overflow-y: auto; flex-grow: 1; }
     .pack-card { background: var(--inner-bg); padding: 4vmin; border-radius: 2vmin; border: 1px solid var(--master-glass-border); text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
@@ -172,7 +181,7 @@
     <!-- STORE -->
     <div id="store-screen" class="screen">
         <div class="top-bar">
-            <button onclick="showScreen('menu-screen')" style="padding: 1.5vmin; font-size: 2.5vmin;">⬅ Back</button>
+            <button class="back-btn" onclick="showScreen('menu-screen')">⬅ Back</button>
             <div class="currency-bank" id="store-bank">💰 0 Coins</div>
         </div>
         <div class="logo"><span>Pack</span> Store</div>
@@ -182,7 +191,7 @@
     <!-- PACK & TEAM SELECT -->
     <div id="setup-screen" class="screen">
         <div class="top-bar">
-            <button onclick="showScreen('menu-screen')" style="padding: 1.5vmin; font-size: 2.5vmin;">⬅ Back</button>
+            <button class="back-btn" onclick="showScreen('menu-screen')">⬅ Back</button>
         </div>
         <div class="logo"><span>Setup</span></div>
         <h2>1. Select Pack</h2>
@@ -200,6 +209,8 @@
     <!-- GAMEPLAY -->
     <div id="game-screen" class="screen">
         <div class="top-bar">
+            <!-- New Quit Button -->
+            <button class="back-btn" onclick="quitGame()">⬅ Quit</button>
             <div id="scoreboard"></div>
             <div id="strikes-display"></div>
         </div>
@@ -244,9 +255,9 @@ function playSfx(name) {
 }
 
 let bank = parseInt(localStorage.getItem('rf_coins')) || 0;
-let unlockedPacks = JSON.parse(localStorage.getItem('rf_unlocks')) || ['wild_web', 'worldbuilder_history', 'measure_google_once'];
+let unlockedPacks = JSON.parse(localStorage.getItem('rf_unlocks')) ||['wild_web', 'worldbuilder_history', 'measure_google_once'];
 
-let allPacks = [];
+let allPacks =[];
 let selectedPack = null;
 let activeQuestions = [];
 let teams =[];
@@ -283,6 +294,14 @@ function showScreen(id) {
     playSfx('click');
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
+}
+
+// Quit Game handler
+function quitGame() {
+    playSfx('click');
+    if(confirm("Are you sure you want to quit? You will lose any points banked this round.")) {
+        showScreen('menu-screen');
+    }
 }
 
 function goToStore() {
@@ -388,7 +407,7 @@ function getFeudDistractors(currentQuestion, pack) {
     pack.questions.forEach(q => {
         if(q.q !== currentQuestion.q) allValidAnswers.push(...q.a);
     });
-    let uniqueDistractors = [...new Set(allValidAnswers)].sort(() => 0.5 - Math.random());
+    let uniqueDistractors =[...new Set(allValidAnswers)].sort(() => 0.5 - Math.random());
     return uniqueDistractors.slice(0, 4);
 }
 
@@ -411,7 +430,7 @@ function setupRound() {
         document.getElementById('letter-board-container').style.display = 'flex';
         
         let targetWord = qData.a.toUpperCase();
-        let uniqueLetters = [...new Set(targetWord.split(''))].filter(c => c.trim() !== '');
+        let uniqueLetters =[...new Set(targetWord.split(''))].filter(c => c.trim() !== '');
         currentAnswers = uniqueLetters.map(l => ({ text: l, revealed: false, points: 50 }));
         
         const lbc = document.getElementById('letter-board-container');
@@ -500,6 +519,8 @@ function renderScores() {
 
 // Feud Processing
 function processFeudChoice(btn, choiceText) {
+    if (strikes >= 3 && !isStealMode) return; // Prevent spam-clicking when striking out
+    
     let matchIdx = currentAnswers.findIndex(a => a.text === choiceText);
 
     if (matchIdx !== -1 && !currentAnswers[matchIdx].revealed) {
@@ -534,6 +555,8 @@ function processFeudChoice(btn, choiceText) {
 
 // Letter Pool Processing
 function processLetterChoice(btn, choiceText, targetRevealCount) {
+    if (strikes >= 3 && !isStealMode) return; // Prevent spam-clicking when striking out
+
     let matchIdx = currentAnswers.findIndex(a => a.text === choiceText);
 
     if (matchIdx !== -1 && !currentAnswers[matchIdx].revealed) {
@@ -609,6 +632,9 @@ function finishRound() {
         });
     }
     renderScores();
+    
+    // Auto-scroll to the bottom so the Next button is always visible
+    document.getElementById('game-screen').scrollTo({ top: document.getElementById('game-screen').scrollHeight, behavior: 'smooth' });
 }
 
 function nextRound() {
