@@ -211,5 +211,170 @@
       { "q": "Why is the government hiding...", "a":["aliens", "the cure for cancer", "giants", "time travel"] },
       { "q": "Is the Denver airport...", "a":["illuminati", "a bunker", "haunted", "the largest in the us"] }
     ]
+  },
+  {
+    "id": "keyboard_warriors",
+    "name": "Keyboard Warriors & Tryhards",
+    "description": "Gamer rage, intense role-playing, and tech support nightmares.",
+    "price": 500,
+    "unlockedByDefault": false,
+    "type": "feud",
+    "questions":[
+      { "q": "Is it illegal to hack my...", "a":["school", "spouse's phone", "ex's instagram", "wifi neighbor"] },
+      { "q": "Why does my PC smell like...", "a":["burning plastic", "fish", "ozone", "smoke"] },
+      { "q": "How to convince my squad that...", "a":["I'm not trash", "I have a girlfriend", "I'm lagging", "it's a tactical retreat"] },
+      { "q": "Can playing too much Roblox...", "a":["give you a virus", "ruin your life", "cause autism", "fry your gpu"] },
+      { "q": "Why is my gaming chair...", "a":["peeling", "leaning forward", "so uncomfortable", "squeaking"] }
+    ]
+  },
+  {
+    "id": "measure_twice",
+    "name": "Measure Twice, Cry Once",
+    "description": "DIY disasters, extreme crafting meltdowns, and regrets.",
+    "price": 600,
+    "unlockedByDefault": false,
+    "type": "feud",
+    "questions":[
+      { "q": "How to get superglue off a...", "a":["finger", "lip", "table", "cat"] },
+      { "q": "Can you build a patio out of...", "a":["pallets", "cinder blocks", "gravel", "cardboard"] },
+      { "q": "What to do if you accidentally saw through...", "a":["a wire", "a water pipe", "your finger", "a joist"] },
+      { "q": "How to fix a hole in the wall with...", "a":["toothpaste", "ramen noodles", "paper towel", "duct tape"] },
+      { "q": "Why is my toilet...", "a":["bubbling", "constantly running", "sweating", "flushing itself"] }
+    ]
+  },
+  {
+    "id": "writers_watchlist",
+    "name": "The Writer's Watchlist",
+    "description": "Suspicious searches by people writing crime novels.",
+    "price": 750,
+    "unlockedByDefault": false,
+    "type": "feud",
+    "questions":[
+      { "q": "How long does it take for a body to...", "a":["decompose", "stiffen", "float", "turn to bone"] },
+      { "q": "What does a dragon's breath smell like?", "a":["sulfur", "ozone", "rotten meat", "ash"] },
+      { "q": "How to make a fake passport using...", "a":["photoshop", "a dead person's info", "the dark web", "a printer"] },
+      { "q": "Which poison is completely...", "a":["tasteless", "untraceable", "painless", "odorless"] },
+      { "q": "How to pick a lock with a...", "a":["bobby pin", "paperclip", "credit card", "knife"] }
+    ]
+  },
+  {
+    "id": "incognito_mode",
+    "name": "Incognito Mode Confessions",
+    "description": "The weirdest, most embarrassing questions people ask.",
+    "price": 850,
+    "unlockedByDefault": false,
+    "type": "feud",
+    "questions":[
+      { "q": "How to politely tell someone they...", "a":["smell bad", "have bad breath", "talk too much", "are annoying"] },
+      { "q": "Is it illegal to marry a...", "a":["first cousin", "sibling", "minor", "tree"] },
+      { "q": "Can my boss see that I searched for...", "a": ["jobs", "reddit", "inappropriate things", "youtube"] },
+      { "q": "Why do I always fall in love with...", "a":["fictional characters", "my boss", "jerks", "my therapist"] },
+      { "q": "How to unsend a text to my...", "a": ["ex", "boss", "mom", "crush"] }
+    ]
+  },
+  {
+    "id": "tin_foil_hats",
+    "name": "Tin Foil Hats",
+    "description": "Conspiracy theories, cryptids, and the weirdest web.",
+    "price": 1000,
+    "unlockedByDefault": false,
+    "type": "feud",
+    "questions": [
+      { "q": "Are birds actually...", "a":["real", "government drones", "dinosaurs", "spies"] },
+      { "q": "How to tell if your neighbor is a...", "a": ["narc", "sociopath", "vampire", "alien"] },
+      { "q": "Did the government invent...", "a":["the internet", "covid", "weather", "dinosaurs"] },
+      { "q": "Is the moon landing...", "a":["fake", "real", "a hoax", "filmed by stanley kubrick"] },
+      { "q": "Why do elites drink...", "a": ["blood", "adrenochrome", "raw milk", "baby blood"] }
+    ]
+  },
+  {
+    "id": "worldbuilder_history",
+    "name": "Worldbuilder's Web History",
+    "description": "Frantic late-night searches by authors trying to get lore right.",
+    "price": 0,
+    "unlockedByDefault": true,
+    "type": "letter_pool",
+    "questions":[
+      { "q": "How long does it take to naturally reclaim a lost ______?", "a": "WORLD" },
+      { "q": "What is the realistic blast radius of a ______?", "a": "VOLCANO" },
+      { "q": "How to properly format a digital ______?", "a": "MANUSCRIPT" },
+      { "q": "Can a human survive eating only ______?", "a": "MUSHROOMS" },
+      { "q": "How deep do you have to dig to hit ______?", "a": "MAGMA" }
+    ]
+  },
+  {
+    "id": "measure_google_once",
+    "name": "Measure Twice, Google Once",
+    "description": "DIY shop disasters fixing expensive mistakes.",
+    "price": 0,
+    "unlockedByDefault": true,
+    "type": "letter_pool",
+    "questions":[
+      { "q": "Why is my new ______ table sticky?", "a": "WALNUT" },
+      { "q": "How to get cedar sap out of a ______?", "a": "SHIRT" },
+      { "q": "Can you sharpen a Japanese carving ______ with sandpaper?", "a": "KNIFE" },
+      { "q": "How to un-glue a PVC ______?", "a": "PIPE" },
+      { "q": "Is it safe to inhale polyurethane ______?", "a": "FUMES" }
+    ]
+  },
+  {
+    "id": "infosec_nightmares",
+    "name": "InfoSec Nightmares",
+    "description": "Frustrated tech pros navigating access management chaos.",
+    "price": 100,
+    "unlockedByDefault": false,
+    "type": "letter_pool",
+    "questions":[
+      { "q": "Is it illegal to ping a government ______?", "a": "SERVER" },
+      { "q": "How to bypass a forgotten ______?", "a": "PASSWORD" },
+      { "q": "Why did my identity verification ______ fail?", "a": "AUDIT" },
+      { "q": "Can you get a virus from opening a ______?", "a": "PDF" },
+      { "q": "What to do if someone leaks my ______?", "a": "DATABASE" }
+    ]
+  },
+  {
+    "id": "rage_quits_lp",
+    "name": "Rage Quits & Roleplay",
+    "description": "Intense gamer inquiries and hardware meltdowns.",
+    "price": 250,
+    "unlockedByDefault": false,
+    "type": "letter_pool",
+    "questions":[
+      { "q": "How to fix stick drift on a Nintendo ______?", "a": "SWITCH" },
+      { "q": "What happens if you attack the ______ in Baldur's Gate?", "a": "DRUID" },
+      { "q": "Can a graphics card survive a ______?", "a": "SPILL" },
+      { "q": "Why is my ping so high on this ______?", "a": "SERVER" },
+      { "q": "How to romance the ______ in Cyberpunk?", "a": "BARTENDER" }
+    ]
+  },
+  {
+    "id": "canine_conundrums",
+    "name": "Canine Conundrums",
+    "description": "Pet owners turning to the internet for unhinged dogs.",
+    "price": 400,
+    "unlockedByDefault": false,
+    "type": "letter_pool",
+    "questions":[
+      { "q": "Is it an emergency if my dog ate a ______?", "a": "LEGO" },
+      { "q": "Why does my dog bark at the ______?", "a": "CEILING" },
+      { "q": "Can dogs see in the ______?", "a": "DARK" },
+      { "q": "How to get a dog to drop a ______?", "a": "BIRD" },
+      { "q": "Why does my dog smell like a ______?", "a": "SKUNK" }
+    ]
+  },
+  {
+    "id": "delivery_fee_regrets",
+    "name": "The \"Delivery Fee\" Regrets",
+    "description": "Late-night food ordering mysteries and desperation.",
+    "price": 500,
+    "unlockedByDefault": false,
+    "type": "letter_pool",
+    "questions":[
+      { "q": "How long can Asian takeout sit in the ______?", "a": "CAR" },
+      { "q": "Is it rude to order just ______ on DoorDash?", "a": "SAUCE" },
+      { "q": "Can you microwave a cardboard ______?", "a": "BOX" },
+      { "q": "What happens if you eat a raw ______?", "a": "DUMPLING" },
+      { "q": "How to get pizza grease out of a ______?", "a": "COUCH" }
+    ]
   }
 ]
