@@ -18,18 +18,19 @@
     :root {
         --bg-solid: #030303;
         --purple-light: #b066ff;
-        --purple-neon: #d558ff; /* Replaces Cyan for borders/text */
-        --purple-grad: linear-gradient(135deg, #b066ff, #ff66e5); /* Replaces Cyan gradients */
+        --purple-neon: #d558ff; 
+        --purple-grad: linear-gradient(135deg, #b066ff, #ff66e5); 
         --green: #00ff88;
         --red: #ff2a5f;
         --yellow: #ffb300;
         
-        --master-glass-bg: linear-gradient(145deg, rgba(35, 30, 45, 0.45) 0%, rgba(10, 5, 15, 0.7) 100%);
-        --master-glass-border: rgba(176, 102, 255, 0.2);
-        --inner-bg: rgba(0, 0, 0, 0.5);
+        /* Glossier, more transparent glass */
+        --master-glass-bg: linear-gradient(145deg, rgba(45, 20, 75, 0.25) 0%, rgba(10, 5, 20, 0.5) 100%);
+        --master-glass-border: rgba(176, 102, 255, 0.25);
+        --master-glass-highlight: rgba(255, 255, 255, 0.15);
+        --inner-bg: rgba(0, 0, 0, 0.35);
     }
 
-    /* Prevent text selection and pinch-to-zoom for app-like feel */
     * { box-sizing: border-box; font-family: 'Outfit', sans-serif; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
 
     body {
@@ -58,7 +59,7 @@
 
     .moving-light {
         position: fixed; width: 80vw; height: 80vw;
-        background: radial-gradient(circle, rgba(176, 102, 255, 0.35) 0%, rgba(0, 0, 0, 0) 65%);
+        background: radial-gradient(circle, rgba(176, 102, 255, 0.4) 0%, rgba(0, 0, 0, 0) 65%);
         border-radius: 50%; z-index: -1; filter: blur(8vw);
         animation: roam 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -72,10 +73,11 @@
 
     .screen {
         display: none; width: 100%; height: 100%;
-        background: var(--master-glass-bg); backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px); border: 1px solid var(--master-glass-border);
-        border-radius: 3vmin; box-shadow: 0 4vmin 6vmin rgba(0, 0, 0, 0.8), inset 0 1px 2vmin rgba(176,102,255,0.1);
-        padding: 3vmin; flex-direction: column;
+        background: var(--master-glass-bg); backdrop-filter: blur(35px);
+        -webkit-backdrop-filter: blur(35px); border: 1px solid var(--master-glass-border);
+        border-top: 1px solid var(--master-glass-highlight); /* Glass edge highlight */
+        border-radius: 3vmin; box-shadow: 0 4vmin 8vmin rgba(0, 0, 0, 0.9), inset 0 1px 2vmin rgba(176,102,255,0.1);
+        padding: 4vmin; flex-direction: column;
         overflow-y: auto;
     }
     .screen.active { display: flex; animation: fadeIn 0.4s ease-out; }
@@ -84,48 +86,60 @@
 
     .logo {
         font-size: 8vmin; font-weight: 900; text-align: center; text-transform: uppercase;
-        letter-spacing: -0.2vmin; margin-bottom: 2vmin; text-shadow: 0 1vmin 2vmin rgba(0,0,0,0.8);
+        letter-spacing: -0.2vmin; margin-bottom: 2vmin; text-shadow: 0 1vmin 3vmin rgba(0,0,0,0.9);
     }
     .logo span { background: var(--purple-grad); -webkit-background-clip: text; color: transparent; }
     
     h2 { text-align: center; color: #d8b8ff; font-weight: 300; font-size: 3.5vmin; margin-bottom: 3vmin; }
 
-    .btn-grid { display: flex; flex-direction: column; gap: 2vmin; width: 60%; margin: 0 auto; }
+    .btn-grid { display: flex; flex-direction: column; gap: 2.5vmin; width: 60%; margin: 0 auto; }
     button {
-        background: rgba(45, 30, 60, 0.6); border: 1px solid rgba(176, 102, 255, 0.3);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.2) 100%);
+        border: 1px solid rgba(176, 102, 255, 0.3);
+        border-top: 1px solid rgba(255, 255, 255, 0.2); /* Glossy top edge */
         color: #fff; padding: 2.5vmin; border-radius: 2vmin; font-size: 3vmin;
-        font-weight: 800; cursor: pointer; transition: 0.2s; text-transform: uppercase;
+        font-weight: 800; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase;
         box-shadow: 0 1vmin 2vmin rgba(0,0,0,0.3);
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     }
-    button:hover:not(:disabled) { background: rgba(75, 40, 100, 0.8); border-color: var(--purple-neon); transform: translateY(-0.5vmin); box-shadow: 0 1.5vmin 3vmin rgba(176,102,255,0.2); }
+    button:hover:not(:disabled) { 
+        background: linear-gradient(135deg, rgba(176, 102, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
+        border-color: var(--purple-neon); transform: translateY(-0.5vmin); 
+        box-shadow: 0 1.5vmin 3vmin rgba(176,102,255,0.25), 0 0 2vmin rgba(213, 88, 255, 0.2); 
+    }
     button:active { transform: translateY(0); }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .back-btn { 
-        background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); 
+        background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); 
         padding: 1.5vmin 2vmin; border-radius: 1vmin; font-size: 2.2vmin; color: #fff; 
         text-transform: uppercase; cursor: pointer; transition: 0.2s; width: auto; box-shadow: none;
     }
-    .back-btn:hover { background: rgba(255,42,95,0.4); border-color: var(--red); box-shadow: 0 0 1.5vmin rgba(255,42,95,0.3); }
+    .back-btn:hover { background: rgba(255,42,95,0.3); border-color: var(--red); box-shadow: 0 0 1.5vmin rgba(255,42,95,0.3); }
 
-    .top-bar { display: flex; justify-content: space-between; align-items: center; background: var(--inner-bg); border-radius: 2vmin; padding: 2vmin 3vmin; margin-bottom: 2vmin; border: 1px solid var(--master-glass-border); }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; background: var(--inner-bg); border-radius: 2vmin; padding: 2vmin 3vmin; margin-bottom: 2vmin; border: 1px solid var(--master-glass-border); box-shadow: inset 0 1px 1vmin rgba(255,255,255,0.05); }
     .currency-bank { font-size: 4vmin; font-weight: 900; color: var(--yellow); text-shadow: 0 0 1vmin rgba(255, 179, 0, 0.5); }
     
     #scoreboard { display: flex; gap: 2vmin; flex: 1; justify-content: center; }
-    .score-pill { padding: 1.5vmin 3vmin; border-radius: 1.5vmin; background: rgba(0,0,0,0.6); font-weight: 800; font-size: 3vmin; transition: 0.3s; color: #ccc; border: 1px solid rgba(176,102,255,0.2); }
-    .active-team { background: rgba(176, 102, 255, 0.2); border-color: var(--purple-neon); color: var(--purple-neon); transform: scale(1.05); box-shadow: 0 0 2vmin rgba(213, 88, 255, 0.3); }
+    .score-pill { padding: 1.5vmin 3vmin; border-radius: 1.5vmin; background: rgba(0,0,0,0.4); font-weight: 800; font-size: 3vmin; transition: 0.3s; color: #ccc; border: 1px solid rgba(176,102,255,0.2); }
+    .active-team { background: rgba(176, 102, 255, 0.25); border-color: var(--purple-neon); color: #fff; text-shadow: 0 0 1vmin var(--purple-neon); transform: scale(1.05); box-shadow: 0 0 2vmin rgba(213, 88, 255, 0.3); }
     .stealing-team { background: rgba(255, 179, 0, 0.2); border-color: var(--yellow); color: var(--yellow); animation: pulseSteal 1s infinite alternate; }
 
     @keyframes pulseSteal { from { box-shadow: 0 0 1vmin var(--yellow); } to { box-shadow: 0 0 3vmin var(--yellow); } }
 
-    #strikes-display { font-size: 5vmin; color: var(--red); font-weight: 900; letter-spacing: 1vmin; min-width: 15vmin; text-align: right; }
+    #strikes-display { font-size: 5vmin; color: var(--red); font-weight: 900; letter-spacing: 1vmin; min-width: 15vmin; text-align: right; text-shadow: 0 0 2vmin rgba(255, 42, 95, 0.5); }
 
     .query-box { font-size: 4.5vmin; font-weight: 800; text-align: center; padding: 3vmin; margin-bottom: 2vmin; background: var(--inner-bg); border-top: 0.5vmin solid var(--purple-neon); border-radius: 2vmin; box-shadow: 0 1vmin 3vmin rgba(0,0,0,0.5); }
     
-    #steal-banner { display: none; background: var(--yellow); color: #000; text-align: center; font-weight: 900; font-size: 3vmin; padding: 1.5vmin; border-radius: 1vmin; margin-bottom: 2vmin; text-transform: uppercase; animation: shake 0.5s; }
+    #steal-banner { display: none; background: var(--yellow); color: #000; text-align: center; font-weight: 900; font-size: 3vmin; padding: 1.5vmin; border-radius: 1vmin; margin-bottom: 2vmin; text-transform: uppercase; animation: shake 0.5s; box-shadow: 0 0 2vmin var(--yellow); }
 
+    /* Setup specific layout */
+    #pack-select-container { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 2vmin; width: 100%; margin-bottom: 4vmin; }
+    #pack-select-container button { width: calc(50% - 2vmin); margin: 0; }
+    
+    /* Feud Board */
     .board-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2vmin; margin-bottom: 2vmin; }
-    .board-row { display: flex; align-items: center; background: rgba(0, 0, 0, 0.6); border: 1px solid var(--master-glass-border); border-radius: 2vmin; padding: 2.5vmin; font-size: 3.5vmin; font-weight: 500; text-transform: uppercase; }
+    .board-row { display: flex; align-items: center; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--master-glass-border); border-radius: 2vmin; padding: 2.5vmin; font-size: 3.5vmin; font-weight: 500; text-transform: uppercase; }
     .board-row.revealed { background: rgba(0, 255, 136, 0.15); border-color: var(--green); box-shadow: inset 0 0 2vmin rgba(0,255,136,0.1); }
     .board-row.missed { background: rgba(255, 42, 95, 0.15); border-color: rgba(255, 42, 95, 0.3); opacity: 0.7; }
     .rank { background: var(--purple-grad); color: #fff; width: 6vmin; height: 6vmin; display: flex; align-items: center; justify-content: center; border-radius: 1vmin; font-weight: 900; margin-right: 2vmin; font-size: 3vmin; box-shadow: 0 0 1vmin rgba(213, 88, 255, 0.5); }
@@ -133,21 +147,24 @@
     .ans-pts { color: var(--green); font-weight: 900; font-size: 4vmin; text-shadow: 0 0 1vmin rgba(0,255,136,0.3); }
     .hidden-content .ans-text, .hidden-content .ans-pts { opacity: 0; }
 
+    /* Letter Pool Board */
     #letter-board-container { display: none; justify-content: center; gap: 1.5vmin; margin-bottom: 3vmin; flex-wrap: wrap; }
     .letter-blank { width: 5vmin; height: 6vmin; border-bottom: 0.6vmin solid var(--purple-neon); display: flex; align-items: center; justify-content: center; font-size: 5vmin; font-weight: 900; color: #fff; text-transform: uppercase; transition: all 0.3s ease; }
     .letter-blank.hidden-letter { color: transparent; }
     .letter-blank.revealed-letter { color: var(--green); text-shadow: 0 0 1.5vmin rgba(0, 255, 136, 0.5); border-color: var(--green); transform: scale(1.1); }
     .letter-blank.missed-letter { color: var(--red); border-color: var(--red); opacity: 0.7; }
 
-    .choices-area { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5vmin; padding: 2vmin; background: var(--inner-bg); border-radius: 2vmin; flex-grow: 1; align-content: start; border: 1px solid var(--master-glass-border); }
-    .choice-btn { font-size: 3vmin; padding: 2vmin; display: flex; align-items: center; justify-content: center; word-wrap: break-word; line-height: 1.2; box-shadow: inset 0 1px 1vmin rgba(255,255,255,0.05); }
-    .choice-btn.letter-btn { font-size: 4vmin; font-weight: 900; padding: 1.5vmin; }
+    /* Controller Area */
+    .choices-area { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5vmin; padding: 2.5vmin; background: var(--inner-bg); border-radius: 2vmin; flex-grow: 1; align-content: start; border: 1px solid var(--master-glass-border); box-shadow: inset 0 1px 1vmin rgba(255,255,255,0.05); }
+    .choice-btn { font-size: 3vmin; padding: 2vmin; display: flex; align-items: center; justify-content: center; word-wrap: break-word; line-height: 1.2; }
+    .choice-btn.letter-btn { font-size: 4.5vmin; font-weight: 900; padding: 1.5vmin; }
     .choice-btn.correct { background: rgba(0, 255, 136, 0.25) !important; border-color: var(--green) !important; color: var(--green); box-shadow: 0 0 1.5vmin rgba(0,255,136,0.2); }
     .choice-btn.wrong { background: rgba(255, 42, 95, 0.25) !important; border-color: var(--red) !important; color: var(--red); animation: shake 0.4s; box-shadow: 0 0 1.5vmin rgba(255,42,95,0.2); }
 
     .give-up-btn { background: rgba(255, 42, 95, 0.15); border-color: var(--red); color: var(--red); margin-top: 2vmin; font-size: 3vmin; width: 100%; padding: 2.5vmin; flex-shrink: 0; }
     .give-up-btn:hover { background: rgba(255, 42, 95, 0.3); }
 
+    /* Store UI */
     .store-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3vmin; margin: 3vmin 0; overflow-y: auto; flex-grow: 1; }
     .pack-card { background: var(--inner-bg); padding: 4vmin; border-radius: 2vmin; border: 1px solid var(--master-glass-border); text-align: center; display: flex; flex-direction: column; justify-content: space-between; box-shadow: inset 0 1px 2vmin rgba(176,102,255,0.05); }
     .pack-card h3 { font-size: 4vmin; color: var(--purple-neon); margin-bottom: 1vmin; }
@@ -155,6 +172,7 @@
     .buy-btn { background: var(--yellow); color: #000; border: none; font-size: 3vmin; padding: 2vmin; box-shadow: 0 1vmin 2vmin rgba(0,0,0,0.4); }
     .buy-btn.owned { background: var(--green); opacity: 0.8; pointer-events: none; color: #000; box-shadow: none; }
 
+    /* End Screen */
     .final-standings { display: flex; flex-direction: column; gap: 2vmin; margin-bottom: 4vmin; flex-grow: 1; justify-content: center; }
     .final-row { display: flex; justify-content: space-between; align-items: center; font-size: 4vmin; padding: 3vmin 4vmin; background: rgba(0,0,0,0.5); border-radius: 2vmin; border-left: 1vmin solid var(--purple-neon); border-top: 1px solid var(--master-glass-border); border-right: 1px solid var(--master-glass-border); border-bottom: 1px solid var(--master-glass-border); }
     .winner-row { border-left-color: var(--yellow); background: rgba(255, 179, 0, 0.15); color: var(--yellow); font-weight: 900; transform: scale(1.02); box-shadow: 0 0 2vmin rgba(255,179,0,0.15); }
@@ -185,6 +203,10 @@
     .close-modal-btn:hover { filter: brightness(1.2); }
 
     @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-1vmin); } 75% { transform: translateX(1vmin); } }
+
+    @media (max-width: 800px) {
+        #pack-select-container button { width: 100%; }
+    }
 </style>
 </head>
 <body>
@@ -233,7 +255,7 @@
         <div class="btn-grid">
             <button onclick="goToPackSelect()">Play Game</button>
             <button onclick="goToStore()">Store / Packs</button>
-            <button class="back-btn" style="width:100%; margin-top: 2vmin; padding: 2vmin; border-radius: 2vmin; font-size: 2.5vmin;" onclick="openAbout()">ℹ️ How To Play</button>
+            <button class="back-btn" style="width:100%; margin-top: 2vmin; padding: 2vmin; border-radius: 2vmin; font-size: 2.5vmin; border-color: rgba(176,102,255,0.5);" onclick="openAbout()">ℹ️ How To Play</button>
         </div>
     </div>
 
@@ -253,15 +275,23 @@
             <button class="back-btn" onclick="showScreen('menu-screen')">⬅ Back</button>
         </div>
         <div class="logo"><span>Setup</span></div>
-        <h2>1. Select Pack</h2>
-        <div class="btn-grid" id="pack-select-container" style="flex-direction: row; flex-wrap: wrap; justify-content: center; margin-bottom: 4vmin; height: 35vh; overflow-y:auto; align-content: flex-start;"></div>
         
-        <h2 id="teams-label" style="display: none;">2. Teams Mode</h2>
-        <div class="btn-grid" style="display: none;" id="team-select-container">
-            <button onclick="startGame(1)">1 Player (Co-op)</button>
-            <button onclick="startGame(2)">2 Teams</button>
-            <button onclick="startGame(3)">3 Teams</button>
-            <button onclick="startGame(4)">4 Teams</button>
+        <!-- Step 1: Pack Selection -->
+        <h2 id="step-1-title">1. Select Pack</h2>
+        <div class="btn-grid" id="pack-select-container"></div>
+        
+        <!-- Step 2: Team Selection -->
+        <div id="team-selection-area" style="display: none; text-align: center; flex-grow: 1;">
+            <h3 id="selected-pack-display" style="color: var(--purple-neon); margin-bottom: 2vmin; font-size: 4vmin; text-transform: uppercase;"></h3>
+            <button class="back-btn" onclick="resetPackSelection()" style="margin-bottom: 5vmin;">Change Pack</button>
+            
+            <h2>2. Teams Mode</h2>
+            <div class="btn-grid" id="team-select-container">
+                <button onclick="startGame(1)">1 Player (Co-op)</button>
+                <button onclick="startGame(2)">2 Teams</button>
+                <button onclick="startGame(3)">3 Teams</button>
+                <button onclick="startGame(4)">4 Teams</button>
+            </div>
         </div>
     </div>
 
@@ -427,32 +457,39 @@ function buyPack(id, price) {
     }
 }
 
+// ------------------------------------
+// Setup Flow (Two-Step Process)
+// ------------------------------------
 function goToPackSelect() {
     showScreen('setup-screen');
+    resetPackSelection();
     const pContainer = document.getElementById('pack-select-container');
-    const tContainer = document.getElementById('team-select-container');
-    const tLabel = document.getElementById('teams-label');
     pContainer.innerHTML = '';
-    tContainer.style.display = 'none';
-    tLabel.style.display = 'none';
 
     allPacks.forEach(pack => {
         if(unlockedPacks.includes(pack.id) || pack.unlockedByDefault) {
             const btn = document.createElement('button');
             let icon = pack.type === 'letter_pool' ? '🅰️' : '🔍';
             btn.textContent = `${icon} ${pack.name}`;
-            btn.style.width = '45%';
             btn.onclick = () => {
-                document.querySelectorAll('#pack-select-container button').forEach(b => b.style.borderColor = 'rgba(255,255,255,0.15)');
-                btn.style.borderColor = 'var(--purple-neon)';
-                selectedPack = pack;
-                tLabel.style.display = 'block';
-                tContainer.style.display = 'flex';
                 playSfx('click');
+                selectedPack = pack;
+                // Transition to Step 2
+                document.getElementById('pack-select-container').style.display = 'none';
+                document.getElementById('step-1-title').style.display = 'none';
+                document.getElementById('selected-pack-display').textContent = `Pack: ${pack.name}`;
+                document.getElementById('team-selection-area').style.display = 'block';
             };
             pContainer.appendChild(btn);
         }
     });
+}
+
+function resetPackSelection() {
+    selectedPack = null;
+    document.getElementById('pack-select-container').style.display = 'flex';
+    document.getElementById('step-1-title').style.display = 'block';
+    document.getElementById('team-selection-area').style.display = 'none';
 }
 
 function startGame(numTeams) {
@@ -532,7 +569,7 @@ function setupRound() {
         });
         
         let decoys = getDecoyLetters(uniqueLetters, 16);
-        let combinedChoices = [...uniqueLetters, ...decoys].sort(() => 0.5 - Math.random());
+        let combinedChoices =[...uniqueLetters, ...decoys].sort(() => 0.5 - Math.random());
         
         combinedChoices.forEach(letter => {
             let btn = document.createElement('button');
