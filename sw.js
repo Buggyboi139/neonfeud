@@ -1,13 +1,17 @@
-const CACHE_NAME = 'neon-feud-v1';
+const CACHE_NAME = 'neon-feud-v2';
 const ASSETS_TO_CACHE =[
   './',
   './index.html',
+  './styles.css',
+  './script.js',
   './packs.json',
-  './click.mp3',
-  './ding.mp3',
-  './buzzer.mp3',
-  './chaching.mp3',
-  './manifest.json'
+  './audio/click.mp3',
+  './audio/ding.mp3',
+  './audio/buzzer.mp3',
+  './audio/chaching.mp3',
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 // Install the service worker and cache assets
