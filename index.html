@@ -31,21 +31,11 @@
         justify-content: center;
     }
 
-    /* Portrait Lock Overlay */
     #portrait-lock {
-        display: none;
-        position: fixed;
-        top: 0; left: 0; width: 100vw; height: 100vh;
-        background: #000;
-        color: var(--cyan);
-        z-index: 99999;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        font-size: 6vmin;
-        font-weight: 900;
-        padding: 10vw;
+        display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+        background: #000; color: var(--cyan); z-index: 99999; flex-direction: column;
+        align-items: center; justify-content: center; text-align: center;
+        font-size: 6vmin; font-weight: 900; padding: 10vw;
     }
     #portrait-lock span { font-size: 15vmin; margin-bottom: 2vh; display: block; }
     
@@ -54,14 +44,10 @@
         #app-container { display: none !important; }
     }
 
-    /* Ambient Background */
     .moving-light {
-        position: fixed;
-        width: 80vw; height: 80vw;
+        position: fixed; width: 80vw; height: 80vw;
         background: radial-gradient(circle, rgba(140, 50, 255, 0.4) 0%, rgba(0, 0, 0, 0) 65%);
-        border-radius: 50%;
-        z-index: -1;
-        filter: blur(8vw);
+        border-radius: 50%; z-index: -1; filter: blur(8vw);
         animation: roam 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
     }
     @keyframes roam {
@@ -70,61 +56,37 @@
         100% { top: 10%; left: 80%; transform: scale(1.5); }
     }
 
-    #app-container {
-        width: 95vw;
-        height: 90vh;
-        position: relative;
-    }
+    #app-container { width: 95vw; height: 90vh; position: relative; }
 
     .screen {
-        display: none; 
-        width: 100%; height: 100%;
-        background: var(--master-glass-bg);
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
-        border: 1px solid var(--master-glass-border);
-        border-radius: 3vmin;
-        box-shadow: 0 4vmin 6vmin rgba(0, 0, 0, 0.8);
-        padding: 3vmin;
-        flex-direction: column;
+        display: none; width: 100%; height: 100%;
+        background: var(--master-glass-bg); backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px); border: 1px solid var(--master-glass-border);
+        border-radius: 3vmin; box-shadow: 0 4vmin 6vmin rgba(0, 0, 0, 0.8);
+        padding: 3vmin; flex-direction: column;
     }
     .screen.active { display: flex; animation: fadeIn 0.4s ease-out; }
 
     @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
-    /* Typography using vmin for TV scaling */
     .logo {
-        font-size: 8vmin;
-        font-weight: 900;
-        text-align: center;
-        text-transform: uppercase;
-        letter-spacing: -0.2vmin;
-        margin-bottom: 2vmin;
-        text-shadow: 0 1vmin 2vmin rgba(0,0,0,0.8);
+        font-size: 8vmin; font-weight: 900; text-align: center; text-transform: uppercase;
+        letter-spacing: -0.2vmin; margin-bottom: 2vmin; text-shadow: 0 1vmin 2vmin rgba(0,0,0,0.8);
     }
     .logo span { background: linear-gradient(to right, var(--cyan), var(--purple-light)); -webkit-background-clip: text; color: transparent; }
     
     h2 { text-align: center; color: #a0a0b0; font-weight: 300; font-size: 3.5vmin; margin-bottom: 3vmin; }
 
-    /* Buttons & Chunky Layout */
     .btn-grid { display: flex; flex-direction: column; gap: 2vmin; width: 60%; margin: 0 auto; }
     button {
-        background: rgba(30, 30, 35, 0.6);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        color: #fff;
-        padding: 3vmin;
-        border-radius: 2vmin;
-        font-size: 3vmin;
-        font-weight: 800;
-        cursor: pointer;
-        transition: 0.2s;
-        text-transform: uppercase;
+        background: rgba(30, 30, 35, 0.6); border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #fff; padding: 3vmin; border-radius: 2vmin; font-size: 3vmin;
+        font-weight: 800; cursor: pointer; transition: 0.2s; text-transform: uppercase;
     }
     button:hover:not(:disabled) { background: rgba(50, 50, 60, 0.8); border-color: var(--cyan); transform: translateY(-0.5vmin); }
     button:active { transform: translateY(0); }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* Header Bar */
     .top-bar { display: flex; justify-content: space-between; align-items: center; background: var(--inner-bg); border-radius: 2vmin; padding: 2vmin 3vmin; margin-bottom: 2vmin; border: 1px solid var(--master-glass-border); }
     .currency-bank { font-size: 4vmin; font-weight: 900; color: var(--yellow); text-shadow: 0 0 1vmin rgba(255, 179, 0, 0.5); }
     
@@ -137,30 +99,36 @@
 
     #strikes-display { font-size: 6vmin; color: var(--red); font-weight: 900; letter-spacing: 1vmin; min-width: 15vmin; text-align: right; }
 
-    /* Game Area */
     .query-box { font-size: 5vmin; font-weight: 800; text-align: center; padding: 4vmin; margin-bottom: 2vmin; background: var(--inner-bg); border-top: 0.5vmin solid var(--cyan); border-radius: 2vmin; }
     
-    #steal-banner { display: none; background: var(--yellow); color: #000; text-align: center; font-weight: 900; font-size: 4vmin; padding: 1.5vmin; border-radius: 1vmin; margin-bottom: 2vmin; text-transform: uppercase; animation: shake 0.5s; }
+    #steal-banner { display: none; background: var(--yellow); color: #000; text-align: center; font-weight: 900; font-size: 3vmin; padding: 1.5vmin; border-radius: 1vmin; margin-bottom: 2vmin; text-transform: uppercase; animation: shake 0.5s; }
 
+    /* Feud Board */
     .board-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2vmin; margin-bottom: 2vmin; }
     .board-row { display: flex; align-items: center; background: rgba(0, 0, 0, 0.6); border: 1px solid var(--master-glass-border); border-radius: 2vmin; padding: 2.5vmin; font-size: 3.5vmin; font-weight: 500; text-transform: uppercase; }
     .board-row.revealed { background: rgba(0, 255, 136, 0.15); border-color: var(--green); }
     .board-row.missed { background: rgba(255, 42, 95, 0.15); border-color: rgba(255, 42, 95, 0.3); opacity: 0.7; }
-    
     .rank { background: linear-gradient(135deg, var(--cyan), #0077ff); color: #fff; width: 6vmin; height: 6vmin; display: flex; align-items: center; justify-content: center; border-radius: 1vmin; font-weight: 900; margin-right: 2vmin; font-size: 3vmin; }
     .ans-text { flex: 1; }
     .ans-pts { color: var(--green); font-weight: 900; font-size: 4vmin; }
     .hidden-content .ans-text, .hidden-content .ans-pts { opacity: 0; }
 
+    /* Letter Pool Board */
+    #letter-board-container { display: none; justify-content: center; gap: 1.5vmin; margin-bottom: 3vmin; flex-wrap: wrap; }
+    .letter-blank { width: 6vmin; height: 8vmin; border-bottom: 0.8vmin solid var(--cyan); display: flex; align-items: center; justify-content: center; font-size: 6vmin; font-weight: 900; color: #fff; text-transform: uppercase; transition: all 0.3s ease; }
+    .letter-blank.hidden-letter { color: transparent; }
+    .letter-blank.revealed-letter { color: var(--green); text-shadow: 0 0 1.5vmin rgba(0, 255, 136, 0.5); border-color: var(--green); transform: scale(1.1); }
+    .letter-blank.missed-letter { color: var(--red); border-color: var(--red); opacity: 0.7; }
+
     /* Controller Area */
     .choices-area { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2vmin; padding: 2vmin; background: var(--inner-bg); border-radius: 2vmin; flex-grow: 1; }
     .choice-btn { min-height: 12vh; font-size: 3vmin; padding: 2vmin; display: flex; align-items: center; justify-content: center; word-wrap: break-word; line-height: 1.2; }
+    .choice-btn.letter-btn { font-size: 5vmin; font-weight: 900; min-height: 8vh; }
     .choice-btn.correct { background: rgba(0, 255, 136, 0.25) !important; border-color: var(--green) !important; color: var(--green); }
     .choice-btn.wrong { background: rgba(255, 42, 95, 0.25) !important; border-color: var(--red) !important; color: var(--red); animation: shake 0.4s; }
 
     .give-up-btn { background: rgba(255, 42, 95, 0.2); border-color: var(--red); color: var(--red); margin-top: 2vmin; font-size: 3vmin; width: 100%; }
 
-    /* Store UI */
     .store-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3vmin; margin: 3vmin 0; overflow-y: auto; flex-grow: 1; }
     .pack-card { background: var(--inner-bg); padding: 4vmin; border-radius: 2vmin; border: 1px solid var(--master-glass-border); text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
     .pack-card h3 { font-size: 4vmin; color: var(--cyan); margin-bottom: 1vmin; }
@@ -168,7 +136,6 @@
     .buy-btn { background: var(--yellow); color: #000; border: none; font-size: 3vmin; padding: 2vmin; }
     .buy-btn.owned { background: var(--green); opacity: 0.8; pointer-events: none; color: #000; }
 
-    /* End Screen */
     .final-standings { display: flex; flex-direction: column; gap: 2vmin; margin-bottom: 4vmin; flex-grow: 1; justify-content: center; }
     .final-row { display: flex; justify-content: space-between; align-items: center; font-size: 4vmin; padding: 3vmin 4vmin; background: rgba(0,0,0,0.5); border-radius: 2vmin; border-left: 1vmin solid var(--cyan); }
     .winner-row { border-left-color: var(--yellow); background: rgba(255, 179, 0, 0.15); color: var(--yellow); font-weight: 900; transform: scale(1.02); }
@@ -194,7 +161,7 @@
             <div></div>
             <div class="currency-bank" id="menu-bank">💰 0 Coins</div>
         </div>
-        <div class="logo" style="margin-top: 10vh;"><span>Retro</span>Feud</div>
+        <div class="logo" style="margin-top: 10vh;"><span>Neon</span>Feud</div>
         <h2>Search Engine Showdown</h2>
         <div class="btn-grid">
             <button onclick="goToPackSelect()">Play Game</button>
@@ -219,9 +186,9 @@
         </div>
         <div class="logo"><span>Setup</span></div>
         <h2>1. Select Pack</h2>
-        <div class="btn-grid" id="pack-select-container" style="flex-direction: row; flex-wrap: wrap; justify-content: center; margin-bottom: 4vmin;"></div>
+        <div class="btn-grid" id="pack-select-container" style="flex-direction: row; flex-wrap: wrap; justify-content: center; margin-bottom: 4vmin; height: 35vh; overflow-y:auto; align-content: flex-start;"></div>
         
-        <h2>2. Teams Mode</h2>
+        <h2 id="teams-label" style="display: none;">2. Teams Mode</h2>
         <div class="btn-grid" style="display: none;" id="team-select-container">
             <button onclick="startGame(1)">1 Player (Co-op)</button>
             <button onclick="startGame(2)">2 Teams</button>
@@ -237,11 +204,12 @@
             <div id="strikes-display"></div>
         </div>
 
-        <div id="steal-banner">🚨 STEAL OPPORTUNITY! ONE GUESS ONLY! 🚨</div>
+        <div id="steal-banner">🚨 STEAL OPPORTUNITY! ONE MISTAKE AND YOU'RE OUT! 🚨</div>
 
         <div class="query-box" id="question-text"></div>
 
         <div class="board-grid" id="board-container"></div>
+        <div id="letter-board-container"></div>
 
         <div class="choices-area" id="choices-container"></div>
 
@@ -262,7 +230,6 @@
 </div>
 
 <script>
-// Audio Setup (Replace files in your directory)
 const sfx = {
     click: new Audio('click.mp3'),
     ding: new Audio('ding.mp3'),
@@ -272,19 +239,13 @@ const sfx = {
 function playSfx(name) {
     if(sfx[name]) {
         sfx[name].currentTime = 0;
-        sfx[name].play().catch(e => console.log("Audio play blocked by browser."));
-    } else {
-        // Fallback to click if specific sounds are missing
-        sfx.click.currentTime = 0;
-        sfx.click.play().catch(e => {});
+        sfx[name].play().catch(e => {});
     }
 }
 
-// Economy State
 let bank = parseInt(localStorage.getItem('rf_coins')) || 0;
-let unlockedPacks = JSON.parse(localStorage.getItem('rf_unlocks')) || ['wild_web'];
+let unlockedPacks = JSON.parse(localStorage.getItem('rf_unlocks')) || ['wild_web', 'worldbuilder_history', 'measure_google_once'];
 
-// Game State
 let allPacks = [];
 let selectedPack = null;
 let activeQuestions = [];
@@ -292,7 +253,6 @@ let teams =[];
 let currentTeamIdx = 0;
 let currentQIdx = 0;
 
-// Round State
 let strikes = 0;
 let roundBank = 0;
 let currentAnswers =[];
@@ -302,7 +262,6 @@ let isStealMode = false;
 let totalPossibleReveals = 0;
 let totalActualReveals = 0;
 
-// Initialization
 window.onload = async () => {
     updateBankUI();
     try {
@@ -326,7 +285,6 @@ function showScreen(id) {
     document.getElementById(id).classList.add('active');
 }
 
-// Store Logic
 function goToStore() {
     showScreen('store-screen');
     const container = document.getElementById('store-container');
@@ -336,11 +294,13 @@ function goToStore() {
         const isOwned = unlockedPacks.includes(pack.id) || pack.unlockedByDefault;
         if(pack.unlockedByDefault && !unlockedPacks.includes(pack.id)) unlockedPacks.push(pack.id);
 
+        let icon = pack.type === 'letter_pool' ? '🅰️' : '🔍';
+
         const card = document.createElement('div');
         card.className = 'pack-card';
         card.innerHTML = `
             <div>
-                <h3>${pack.name}</h3>
+                <h3>${icon} ${pack.name}</h3>
                 <p>${pack.description}</p>
                 <p style="color:var(--cyan)">${pack.questions.length} Questions</p>
             </div>
@@ -358,30 +318,33 @@ function buyPack(id, price) {
         bank -= price;
         unlockedPacks.push(id);
         playSfx('chaching');
-        goToStore(); // refresh
+        goToStore();
     } else {
         playSfx('buzzer');
         alert("Not enough coins!");
     }
 }
 
-// Game Setup Logic
 function goToPackSelect() {
     showScreen('setup-screen');
     const pContainer = document.getElementById('pack-select-container');
     const tContainer = document.getElementById('team-select-container');
+    const tLabel = document.getElementById('teams-label');
     pContainer.innerHTML = '';
     tContainer.style.display = 'none';
+    tLabel.style.display = 'none';
 
     allPacks.forEach(pack => {
         if(unlockedPacks.includes(pack.id) || pack.unlockedByDefault) {
             const btn = document.createElement('button');
-            btn.textContent = pack.name;
+            let icon = pack.type === 'letter_pool' ? '🅰️' : '🔍';
+            btn.textContent = `${icon} ${pack.name}`;
             btn.style.width = '45%';
             btn.onclick = () => {
                 document.querySelectorAll('#pack-select-container button').forEach(b => b.style.borderColor = 'rgba(255,255,255,0.15)');
                 btn.style.borderColor = 'var(--cyan)';
                 selectedPack = pack;
+                tLabel.style.display = 'block';
                 tContainer.style.display = 'flex';
                 playSfx('click');
             };
@@ -395,23 +358,36 @@ function startGame(numTeams) {
     isCoop = (numTeams === 1);
     teams = Array.from({length: numTeams}, (_, i) => ({ id: i+1, score: 0 }));
     
-    // Pick 5 random questions for a session
-    activeQuestions = [...selectedPack.questions].sort(() => 0.5 - Math.random()).slice(0, 5);
-    totalPossibleReveals = activeQuestions.length * 4;
-    totalActualReveals = 0;
+    activeQuestions =[...selectedPack.questions].sort(() => 0.5 - Math.random()).slice(0, 5);
+    totalPossibleReveals = 0;
     
+    if (selectedPack.type === 'letter_pool') {
+        activeQuestions.forEach(q => {
+            let uniqueLetters = new Set(q.a.toUpperCase().split(''));
+            totalPossibleReveals += uniqueLetters.size;
+        });
+    } else {
+        totalPossibleReveals = activeQuestions.length * 4;
+    }
+    
+    totalActualReveals = 0;
     currentQIdx = 0;
     showScreen('game-screen');
     setupRound();
 }
 
-// Dynamic Distractor Generator
-function getDistractors(currentQuestion, pack) {
+function getDecoyLetters(excludeLetters, totalTiles) {
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
+    const available = alphabet.filter(l => !excludeLetters.includes(l));
+    const shuffled = available.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, totalTiles - excludeLetters.length);
+}
+
+function getFeudDistractors(currentQuestion, pack) {
     let allValidAnswers =[];
     pack.questions.forEach(q => {
         if(q.q !== currentQuestion.q) allValidAnswers.push(...q.a);
     });
-    // Ensure unique choices
     let uniqueDistractors = [...new Set(allValidAnswers)].sort(() => 0.5 - Math.random());
     return uniqueDistractors.slice(0, 4);
 }
@@ -424,42 +400,75 @@ function setupRound() {
     document.getElementById('give-up-btn').style.display = 'block';
     document.getElementById('steal-banner').style.display = 'none';
     
-    strikes = 0;
-    roundBank = 0;
-    revealedCount = 0;
-    isStealMode = false;
-
-    // Streamlined points: 100, 75, 50, 25
-    const ptsArray =[100, 75, 50, 25];
-    currentAnswers = qData.a.map((text, index) => ({
-        text: text,
-        points: ptsArray[index],
-        revealed: false
-    }));
-
-    const board = document.getElementById('board-container');
-    board.innerHTML = '';
-    currentAnswers.forEach((ans, idx) => {
-        let row = document.createElement('div');
-        row.className = 'board-row hidden-content';
-        row.id = `row-${idx}`;
-        row.innerHTML = `<div class="rank">${idx + 1}</div><div class="ans-text">${ans.text}</div><div class="ans-pts">${ans.points}</div>`;
-        board.appendChild(row);
-    });
-
+    strikes = 0; roundBank = 0; revealedCount = 0; isStealMode = false;
+    
     const choices = document.getElementById('choices-container');
     choices.innerHTML = '';
-    
-    let distractors = getDistractors(qData, selectedPack);
-    let combinedChoices = [...qData.a, ...distractors].sort(() => 0.5 - Math.random());
-    
-    combinedChoices.forEach(choice => {
-        let btn = document.createElement('button');
-        btn.className = 'choice-btn';
-        btn.textContent = choice;
-        btn.onclick = () => processChoice(btn, choice);
-        choices.appendChild(btn);
-    });
+
+    if (selectedPack.type === 'letter_pool') {
+        // LETTER POOL MODE
+        document.getElementById('board-container').style.display = 'none';
+        document.getElementById('letter-board-container').style.display = 'flex';
+        
+        let targetWord = qData.a.toUpperCase();
+        let uniqueLetters = [...new Set(targetWord.split(''))].filter(c => c.trim() !== '');
+        currentAnswers = uniqueLetters.map(l => ({ text: l, revealed: false, points: 50 }));
+        
+        const lbc = document.getElementById('letter-board-container');
+        lbc.innerHTML = '';
+        targetWord.split('').forEach((char, idx) => {
+            let div = document.createElement('div');
+            if (char === ' ' || char === '-') {
+                div.style.width = '3vmin'; div.style.border = 'none';
+            } else {
+                div.className = 'letter-blank hidden-letter';
+                div.id = `blank-${idx}`;
+                div.textContent = char;
+                div.dataset.char = char;
+            }
+            lbc.appendChild(div);
+        });
+        
+        let decoys = getDecoyLetters(uniqueLetters, 16);
+        let combinedChoices = [...uniqueLetters, ...decoys].sort(() => 0.5 - Math.random());
+        
+        combinedChoices.forEach(letter => {
+            let btn = document.createElement('button');
+            btn.className = 'choice-btn letter-btn';
+            btn.textContent = letter;
+            btn.onclick = () => processLetterChoice(btn, letter, uniqueLetters.length);
+            choices.appendChild(btn);
+        });
+        
+    } else {
+        // FEUD MODE
+        document.getElementById('board-container').style.display = 'grid';
+        document.getElementById('letter-board-container').style.display = 'none';
+        
+        const ptsArray =[100, 75, 50, 25];
+        currentAnswers = qData.a.map((text, index) => ({ text: text, points: ptsArray[index], revealed: false }));
+
+        const board = document.getElementById('board-container');
+        board.innerHTML = '';
+        currentAnswers.forEach((ans, idx) => {
+            let row = document.createElement('div');
+            row.className = 'board-row hidden-content';
+            row.id = `row-${idx}`;
+            row.innerHTML = `<div class="rank">${idx + 1}</div><div class="ans-text">${ans.text}</div><div class="ans-pts">${ans.points}</div>`;
+            board.appendChild(row);
+        });
+
+        let distractors = getFeudDistractors(qData, selectedPack);
+        let combinedChoices =[...qData.a, ...distractors].sort(() => 0.5 - Math.random());
+        
+        combinedChoices.forEach(choice => {
+            let btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.textContent = choice;
+            btn.onclick = () => processFeudChoice(btn, choice);
+            choices.appendChild(btn);
+        });
+    }
 
     renderScores();
 }
@@ -489,50 +498,75 @@ function renderScores() {
     }
 }
 
-function processChoice(btn, choiceText) {
+// Feud Processing
+function processFeudChoice(btn, choiceText) {
     let matchIdx = currentAnswers.findIndex(a => a.text === choiceText);
 
     if (matchIdx !== -1 && !currentAnswers[matchIdx].revealed) {
-        // Correct Guess
         playSfx('ding');
         currentAnswers[matchIdx].revealed = true;
-        revealedCount++;
-        totalActualReveals++;
+        revealedCount++; totalActualReveals++;
         btn.classList.add('correct');
         
         let row = document.getElementById(`row-${matchIdx}`);
-        row.classList.remove('hidden-content');
-        row.classList.add('revealed');
+        row.classList.remove('hidden-content'); row.classList.add('revealed');
         
         if (isStealMode) {
-            // Successful steal!
             teams[currentTeamIdx].score += (roundBank + currentAnswers[matchIdx].points);
-            roundBank = 0;
-            finishRound();
+            roundBank = 0; finishRound();
         } else {
-            // Normal play
-            roundBank += currentAnswers[matchIdx].points;
-            renderScores();
+            roundBank += currentAnswers[matchIdx].points; renderScores();
             if (revealedCount === 4) {
-                teams[currentTeamIdx].score += roundBank;
-                roundBank = 0;
-                finishRound();
+                teams[currentTeamIdx].score += roundBank; roundBank = 0; finishRound();
             }
         }
     } else {
-        // Wrong Guess
-        playSfx('buzzer');
-        btn.classList.add('wrong');
-        btn.disabled = true;
+        playSfx('buzzer'); btn.classList.add('wrong'); btn.disabled = true;
 
         if (isStealMode) {
-            // Failed Steal. Original team keeps bank.
             let originalTeam = (currentTeamIdx - 1 + teams.length) % teams.length;
-            teams[originalTeam].score += roundBank;
-            roundBank = 0;
-            finishRound();
+            teams[originalTeam].score += roundBank; roundBank = 0; finishRound();
         } else {
-            // Normal Strike
+            triggerStrike();
+        }
+    }
+}
+
+// Letter Pool Processing
+function processLetterChoice(btn, choiceText, targetRevealCount) {
+    let matchIdx = currentAnswers.findIndex(a => a.text === choiceText);
+
+    if (matchIdx !== -1 && !currentAnswers[matchIdx].revealed) {
+        playSfx('ding');
+        currentAnswers[matchIdx].revealed = true;
+        revealedCount++; totalActualReveals++;
+        btn.classList.add('correct');
+        
+        document.querySelectorAll('.letter-blank').forEach(blank => {
+            if (blank.dataset.char === choiceText) {
+                blank.classList.remove('hidden-letter');
+                blank.classList.add('revealed-letter');
+            }
+        });
+        
+        if (isStealMode) {
+            if (revealedCount === targetRevealCount) {
+                teams[currentTeamIdx].score += (roundBank + currentAnswers.reduce((sum, a) => sum + a.points, 0)); 
+                roundBank = 0; finishRound();
+            }
+        } else {
+            roundBank += currentAnswers[matchIdx].points; renderScores();
+            if (revealedCount === targetRevealCount) {
+                teams[currentTeamIdx].score += roundBank; roundBank = 0; finishRound();
+            }
+        }
+    } else {
+        playSfx('buzzer'); btn.classList.add('wrong'); btn.disabled = true;
+
+        if (isStealMode) {
+            let originalTeam = (currentTeamIdx - 1 + teams.length) % teams.length;
+            teams[originalTeam].score += roundBank; roundBank = 0; finishRound();
+        } else {
             triggerStrike();
         }
     }
@@ -544,40 +578,36 @@ function triggerStrike() {
     
     if (strikes >= 3) {
         if (isCoop) {
-            // Co-op loses bank on 3 strikes
-            roundBank = 0; 
-            setTimeout(finishRound, 1000);
+            roundBank = 0; setTimeout(finishRound, 1000);
         } else {
-            // Steal Mode Activated
             setTimeout(() => {
-                isStealMode = true;
-                currentTeamIdx = (currentTeamIdx + 1) % teams.length;
+                isStealMode = true; currentTeamIdx = (currentTeamIdx + 1) % teams.length;
                 document.getElementById('steal-banner').style.display = 'block';
-                document.getElementById('strikes-display').textContent = '';
-                renderScores();
+                document.getElementById('strikes-display').textContent = ''; renderScores();
             }, 1000);
         }
     }
 }
 
-function giveUpRound() {
-    playSfx('click');
-    roundBank = 0;
-    finishRound();
-}
+function giveUpRound() { playSfx('click'); roundBank = 0; finishRound(); }
 
 function finishRound() {
     document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
     document.getElementById('give-up-btn').style.display = 'none';
     document.getElementById('next-round-btn').style.display = 'block';
     
-    currentAnswers.forEach((ans, idx) => {
-        if (!ans.revealed) {
-            let row = document.getElementById(`row-${idx}`);
-            row.classList.remove('hidden-content');
-            row.classList.add('missed');
-        }
-    });
+    if (selectedPack.type === 'letter_pool') {
+        document.querySelectorAll('.letter-blank.hidden-letter').forEach(blank => {
+            blank.classList.remove('hidden-letter'); blank.classList.add('missed-letter');
+        });
+    } else {
+        currentAnswers.forEach((ans, idx) => {
+            if (!ans.revealed) {
+                let row = document.getElementById(`row-${idx}`);
+                row.classList.remove('hidden-content'); row.classList.add('missed');
+            }
+        });
+    }
     renderScores();
 }
 
@@ -587,11 +617,7 @@ function nextRound() {
     if (currentQIdx >= activeQuestions.length) {
         showGameOver();
     } else {
-        if (!isCoop && !isStealMode) {
-            // If they didn't strike out/steal, next team's turn starts
-            currentTeamIdx = (currentTeamIdx + 1) % teams.length;
-        }
-        // If it was steal mode, currentTeamIdx is already on the stealing team, let them start next round
+        if (!isCoop && !isStealMode) currentTeamIdx = (currentTeamIdx + 1) % teams.length;
         setupRound();
     }
 }
@@ -600,37 +626,23 @@ function showGameOver() {
     showScreen('end-screen');
     playSfx('chaching');
     
-    let standings = document.getElementById('final-standings');
-    standings.innerHTML = '';
+    let standings = document.getElementById('final-standings'); standings.innerHTML = '';
     let sortedTeams = [...teams].sort((a, b) => b.score - a.score);
     
-    // Calculate Accuracy & Rank
-    let accuracy = totalActualReveals / totalPossibleReveals;
-    let title = "";
+    let accuracy = totalActualReveals / totalPossibleReveals; let title = "";
     if(accuracy >= 0.9) title = "Search Engine Scholars 🎓";
     else if(accuracy >= 0.7) title = "Algorithm Whisperers 🤖";
     else if(accuracy >= 0.5) title = "Autocomplete Amateurs ⌨️";
     else title = "Incognito Mode Rookies 🕵️";
 
-    // Reward: Winning score goes to Bank (Coop = total score)
     let reward = sortedTeams[0].score;
-    bank += reward;
-    updateBankUI();
+    bank += reward; updateBankUI();
     document.getElementById('end-earned').textContent = `Earned ${reward} Coins!`;
 
     sortedTeams.forEach((t, i) => {
-        let row = document.createElement('div');
-        row.className = `final-row ${i === 0 ? 'winner-row' : ''}`;
-        
+        let row = document.createElement('div'); row.className = `final-row ${i === 0 ? 'winner-row' : ''}`;
         let teamName = isCoop ? 'Final Score' : `Team ${t.id} ${i === 0 ? '👑' : ''}`;
-        
-        row.innerHTML = `
-            <div>
-                ${teamName}
-                ${i === 0 ? `<span class="rank-title">Rank: ${title}</span>` : ''}
-            </div>
-            <span>${t.score}</span>
-        `;
+        row.innerHTML = `<div>${teamName}${i === 0 ? `<span class="rank-title">Rank: ${title}</span>` : ''}</div><span>${t.score}</span>`;
         standings.appendChild(row);
     });
 }
